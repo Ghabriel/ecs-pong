@@ -1,31 +1,51 @@
 #pragma once
 
+#include <functional>
 #include "../framework/Component.hpp"
+#include "../types/shapes.hpp"
+
+struct MovingCircle {
+    Circle circle;
+    Vector velocity;
+};
 
 struct BallProps {
     sf::RectangleShape boardArea;
+    std::function<void(MovingCircle&)> onMoveAttempt;
 };
 
 struct BallState {
     sf::CircleShape body;
-    float x = 0;
-    float y = 0;
+    MovingCircle data;
 };
 
 class Ball : public react::Component<BallProps, BallState> {
  public:
-    Ball() {
-        state.body = sf::CircleShape(10);
+    void init() override {
+        float x = getCentralizedX();
+        float y = getCentralizedY();
+        float radius = 10;
+
+        Point center { x, y };
+        Circle circle { center, radius };
+        Vector velocity { 1, 0.1 };
+        state.data = { circle, velocity };
+
+        state.body = sf::CircleShape(radius);
         state.body.setFillColor(sf::Color::White);
     }
 
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
         sf::CircleShape& body = state.body;
+        MovingCircle& data = state.data;
 
-        float x = state.x + getCentralizedX();
-        float y = state.y + getCentralizedY();
-        body.setPosition(x, y);
+        props.onMoveAttempt(data);
+
+        body.setPosition(
+            data.circle.center.x - data.circle.radius,
+            data.circle.center.y - data.circle.radius
+        );
 
         window.draw(body);
     }
@@ -34,16 +54,14 @@ class Ball : public react::Component<BallProps, BallState> {
     float getCentralizedX() const {
         auto& boardPosition = props.boardArea.getPosition();
         auto& boardSize = props.boardArea.getSize();
-        float radius = state.body.getRadius();
 
-        return boardPosition.x + (boardSize.x / 2) - radius;
+        return boardPosition.x + (boardSize.x / 2);
     }
 
     float getCentralizedY() const {
         auto& boardPosition = props.boardArea.getPosition();
         auto& boardSize = props.boardArea.getSize();
-        float radius = state.body.getRadius();
 
-        return boardPosition.y + (boardSize.y / 2) - radius;
+        return boardPosition.y + (boardSize.y / 2);
     }
 };

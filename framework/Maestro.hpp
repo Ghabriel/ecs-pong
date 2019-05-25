@@ -28,6 +28,12 @@ namespace react {
         template<typename TComponent>
         void renderChild(TComponent& component, typename TComponent::PropsType props) {
             component.props = props;
+
+            if (!component.isInitialized) {
+                component.isInitialized = true;
+                component.init();
+            }
+
             component.render(context, *this);
         }
 

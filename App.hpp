@@ -5,17 +5,24 @@
 #include "components/Paddle.hpp"
 #include "framework/Component.hpp"
 #include "framework/Maestro.hpp"
+#include "types/shapes.hpp"
 
 struct AppProps { };
 
 struct AppState {
     sf::RectangleShape boardArea;
+    std::function<void(MovingCircle&)> handleBallMove;
 };
 
 class App : public react::Component<AppProps, AppState> {
  public:
     App() {
         state.boardArea = sf::RectangleShape(sf::Vector2f(800, 600));
+
+        state.handleBallMove = [](MovingCircle& data) {
+            data.circle.center.x += data.velocity.x;
+            data.circle.center.y += data.velocity.y;
+        };
     }
 
     void render(void* context, react::Maestro& maestro) override {
@@ -23,7 +30,7 @@ class App : public react::Component<AppProps, AppState> {
 
         maestro.renderChild(leftPaddle, { state.boardArea, 20 });
         maestro.renderChild(rightPaddle, { state.boardArea, 760 });
-        maestro.renderChild(ball, { state.boardArea });
+        maestro.renderChild(ball, { state.boardArea, state.handleBallMove });
     }
 
  private:
