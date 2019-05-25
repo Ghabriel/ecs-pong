@@ -8,7 +8,7 @@ struct BState {
     sf::CircleShape shape;
 };
 
-class SubComponentB : public Component<BProps, BState> {
+class SubComponentB : public react::Component<BProps, BState> {
  public:
     SubComponentB() {
         state.shape = sf::CircleShape(50.f);
@@ -16,7 +16,7 @@ class SubComponentB : public Component<BProps, BState> {
         state.shape.setPosition(0, 400);
     }
 
-    void render(void* context, Maestro& maestro) override {
+    void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
 
         window.draw(state.shape);

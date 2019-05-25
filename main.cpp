@@ -4,7 +4,7 @@
 
 int main(int, char**) {
     sf::RenderWindow window(sf::VideoMode(800, 600), "react.cpp");
-    Maestro maestro(&window);
+    react::Maestro maestro(&window);
     maestro.setRootComponent<App>();
 
     window.setFramerateLimit(60);

@@ -13,14 +13,14 @@ struct AppState {
     sf::CircleShape shape;
 };
 
-class App : public Component<AppProps, AppState> {
+class App : public react::Component<AppProps, AppState> {
  public:
     App() {
         state.shape = sf::CircleShape(100.f);
         state.shape.setFillColor(sf::Color::Red);
     }
 
-    void render(void* context, Maestro& maestro) override {
+    void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
 
         state.shape.setPosition(state.counter, 0);
