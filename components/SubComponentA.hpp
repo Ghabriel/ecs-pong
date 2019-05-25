@@ -4,13 +4,22 @@
 #include "../Component.hpp"
 
 struct AProps { };
+
 struct AState {
-    int counter = 0;
+    sf::CircleShape shape;
 };
 
 class SubComponentA : public Component<AProps, AState> {
  public:
+    SubComponentA() {
+        state.shape = sf::CircleShape(50.f);
+        state.shape.setFillColor(sf::Color::Green);
+        state.shape.setPosition(0, 200);
+    }
+
     void render(void* context, Maestro& maestro) override {
-        std::cout << "SubComponentA::render()\n";
+        auto& window = *static_cast<sf::RenderWindow*>(context);
+
+        window.draw(state.shape);
     }
 };

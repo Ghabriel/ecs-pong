@@ -1,14 +1,24 @@
+#include <SFML/Graphics.hpp>
 #include "App.hpp"
 #include "Maestro.hpp"
 
 int main(int, char**) {
-    int context = 42;
-    Maestro maestro(&context);
+    sf::RenderWindow window(sf::VideoMode(800, 600), "react.cpp");
+    Maestro maestro(&window);
     maestro.setRootComponent<App>();
 
-    maestro.render();
-    std::cout << "--------------\n";
-    maestro.render();
-    std::cout << "--------------\n";
-    maestro.render();
+    window.setFramerateLimit(60);
+
+    while (window.isOpen()) {
+        sf::Event event;
+        while (window.pollEvent(event)) {
+            if (event.type == sf::Event::Closed) {
+                window.close();
+            }
+        }
+
+        window.clear();
+        maestro.render();
+        window.display();
+    }
 }
