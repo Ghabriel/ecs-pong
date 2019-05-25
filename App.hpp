@@ -1,38 +1,33 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "components/SubComponentA.hpp"
-#include "components/SubComponentB.hpp"
+#include "components/Ball.hpp"
+#include "components/Paddle.hpp"
 #include "framework/Component.hpp"
 #include "framework/Maestro.hpp"
 
 struct AppProps { };
 
 struct AppState {
-    int counter = 0;
-    sf::CircleShape shape;
+    sf::RectangleShape boardArea;
 };
 
 class App : public react::Component<AppProps, AppState> {
  public:
     App() {
-        state.shape = sf::CircleShape(100.f);
-        state.shape.setFillColor(sf::Color::Red);
+        state.boardArea = sf::RectangleShape(sf::Vector2f(800, 600));
     }
 
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
 
-        state.shape.setPosition(state.counter, 0);
-        window.draw(state.shape);
-
-        maestro.renderChild(a, {});
-        maestro.renderChild(b, {});
-
-        state.counter++;
+        maestro.renderChild(leftPaddle, { state.boardArea, 20 });
+        maestro.renderChild(rightPaddle, { state.boardArea, 760 });
+        maestro.renderChild(ball, { state.boardArea });
     }
 
  private:
-    SubComponentA a;
-    SubComponentB b;
+    Paddle leftPaddle;
+    Paddle rightPaddle;
+    Ball ball;
 };

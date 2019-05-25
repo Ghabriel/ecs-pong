@@ -1,3 +1,4 @@
+#include <iostream>
 #include <SFML/Graphics.hpp>
 #include "App.hpp"
 #include "framework/Maestro.hpp"
