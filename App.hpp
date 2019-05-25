@@ -1,10 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "Component.hpp"
-#include "Maestro.hpp"
 #include "components/SubComponentA.hpp"
 #include "components/SubComponentB.hpp"
+#include "framework/Component.hpp"
+#include "framework/Maestro.hpp"
 
 struct AppProps { };
 

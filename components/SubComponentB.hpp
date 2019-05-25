@@ -1,7 +1,6 @@
 #pragma once
 
-#include <iostream>
-#include "../Component.hpp"
+#include "../framework/Component.hpp"
 
 struct BProps { };
 

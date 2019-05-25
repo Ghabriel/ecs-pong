@@ -1,6 +1,6 @@
 #include <SFML/Graphics.hpp>
 #include "App.hpp"
-#include "Maestro.hpp"
+#include "framework/Maestro.hpp"
 
 int main(int, char**) {
     sf::RenderWindow window(sf::VideoMode(800, 600), "react.cpp");
