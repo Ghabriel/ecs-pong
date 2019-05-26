@@ -69,7 +69,7 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
         center = collisionPoint + depth.norm() * reflectionDirection;
     }
 
-    velocity = rotate(-velocity, 2 * theta, normal);
+    velocity = rotate(-velocity, 2 * theta);
 
     // for (const auto& edge : closestEdges) {
     //     std::cout << "edge: " << edge << "\n";
