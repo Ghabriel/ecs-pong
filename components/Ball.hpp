@@ -2,12 +2,9 @@
 
 #include <functional>
 #include "../framework/Component.hpp"
-#include "../types/shapes.hpp"
-
-struct MovingCircle {
-    Circle circle;
-    Vector velocity;
-};
+#include "../shapes/Circle.hpp"
+#include "../shapes/Point.hpp"
+#include "../types/physics.hpp"
 
 struct BallProps {
     sf::RectangleShape boardArea;

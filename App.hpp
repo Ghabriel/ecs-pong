@@ -5,7 +5,8 @@
 #include "components/Paddle.hpp"
 #include "framework/Component.hpp"
 #include "framework/Maestro.hpp"
-#include "types/shapes.hpp"
+#include "types/debug.hpp"
+#include "types/physics.hpp"
 
 struct AppProps { };
 
@@ -19,9 +20,20 @@ class App : public react::Component<AppProps, AppState> {
     App() {
         state.boardArea = sf::RectangleShape(sf::Vector2f(800, 600));
 
-        state.handleBallMove = [](MovingCircle& data) {
-            data.circle.center.x += data.velocity.x;
-            data.circle.center.y += data.velocity.y;
+        state.handleBallMove = [this](MovingCircle& ball) {
+            // std::cout << "left data: " << leftPaddle.getData() << "\n";
+            // std::cout << "right data: " << rightPaddle.getData() << "\n";
+
+            bool deflected = interact(ball, leftPaddle.getData());
+            deflected = deflected || interact(ball, rightPaddle.getData());
+
+            if (!deflected) {
+                auto& [x, y] = ball.circle.center;
+                auto& [vx, vy] = ball.velocity;
+
+                x += vx;
+                y += vy;
+            }
         };
     }
 
@@ -34,7 +46,7 @@ class App : public react::Component<AppProps, AppState> {
     }
 
  private:
-    Paddle leftPaddle;
-    Paddle rightPaddle;
+    Paddle<true> leftPaddle;
+    Paddle<false> rightPaddle;
     Ball ball;
 };

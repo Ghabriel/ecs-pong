@@ -1,6 +1,9 @@
 #pragma once
 
 #include "../framework/Component.hpp"
+#include "../shapes/Point.hpp"
+#include "../shapes/Rectangle.hpp"
+#include "../types/physics.hpp"
 
 struct PaddleProps {
     sf::RectangleShape boardArea;
@@ -9,32 +12,51 @@ struct PaddleProps {
 
 struct PaddleState {
     sf::RectangleShape body;
-    float y = 0;
+    Rectangle data;
 };
 
+template<bool KeyboardControlled>
 class Paddle : public react::Component<PaddleProps, PaddleState> {
  public:
-    Paddle() {
-        state.body = sf::RectangleShape(sf::Vector2f(20, 200));
+   void init() override {
+        float width = 20;
+        float height = 200;
+        float y = getCentralizedY(height);
+
+        Point corner { props.x, y };
+        state.data = { corner, width, height };
+
+        state.body = sf::RectangleShape(sf::Vector2f(width, height));
         state.body.setFillColor(sf::Color::White);
     }
 
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
         sf::RectangleShape& body = state.body;
+        Rectangle& data = state.data;
 
-        float y = state.y + getCentralizedY();
-        body.setPosition(props.x, y);
+        if constexpr (KeyboardControlled) {
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
+                data.corner.y -= 3;
+            } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Down)) {
+                data.corner.y += 3;
+            }
+        }
+
+        body.setPosition(data.corner.x, data.corner.y);
 
         window.draw(body);
     }
 
+    Rectangle& getData() {
+        return state.data;
+    }
+
  private:
-    float getCentralizedY() const {
+    float getCentralizedY(float height) const {
         auto& boardPosition = props.boardArea.getPosition();
         auto& boardSize = props.boardArea.getSize();
-        auto& paddleSize = state.body.getSize();
 
-        return boardPosition.y + (boardSize.y / 2) - (paddleSize.y / 2);
+        return boardPosition.y + (boardSize.y / 2) - (height / 2);
     }
 };
