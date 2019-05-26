@@ -24,8 +24,10 @@ class App : public react::Component<AppProps, AppState> {
             // std::cout << "left data: " << leftPaddle.getData() << "\n";
             // std::cout << "right data: " << rightPaddle.getData() << "\n";
 
-            bool deflected = interact(ball, leftPaddle.getData());
-            deflected = deflected || interact(ball, rightPaddle.getData());
+            // bool deflected = interact(ball, leftPaddle.getData());
+            // deflected = deflected || interact(ball, rightPaddle.getData());
+
+            bool deflected = interact(ball, rightPaddle.getData());
 
             if (!deflected) {
                 auto& [x, y] = ball.circle.center;
@@ -39,6 +41,11 @@ class App : public react::Component<AppProps, AppState> {
 
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
+
+        sf::CircleShape c(10);
+        c.setFillColor(sf::Color::Red);
+        c.setPosition(760 - 10, 336 - 10);
+        window.draw(c);
 
         maestro.renderChild(leftPaddle, { state.boardArea, 20 });
         maestro.renderChild(rightPaddle, { state.boardArea, 760 });

@@ -2,6 +2,7 @@
 
 #include <vector>
 #include "../physics/find-closest-edges.hpp"
+#include "../physics/find-collision-point.hpp"
 #include "../shapes/Circle.hpp"
 #include "../shapes/Line.hpp"
 #include "../shapes/Point.hpp"
@@ -17,6 +18,9 @@ struct MovingRectangle {
     Vector velocity;
 };
 
+#include <iostream>
+#include "debug.hpp"
+
 bool interact(MovingCircle& ball, const Rectangle& block) {
     auto& [circle, velocity] = ball;
     auto& [center, radius] = circle;
@@ -24,11 +28,22 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
 
     Line ballTrajectory { center, velocity };
     std::vector<LineSegment> closestEdges = findClosestEdges(block, circle);
-    // Point collisionPoint = findCollisionPoint(ballTrajectory, Line(closestEdges[0]));
+    Line extendedEdge = Line::fromSegment(closestEdges[0]);
+    Point collisionPoint = findCollisionPoint(ballTrajectory, extendedEdge);
 
-    // if (!closestEdges[0].containsPoint(collisionPoint)) {
-    //     return;
+    std::cout << "-------------\n";
+    // for (const auto& edge : closestEdges) {
+    //     std::cout << "edge: " << edge << "\n";
     // }
+    std::cout << "ball trajectory: " << ballTrajectory << "\n";
+    std::cout << "closest edge: " << closestEdges[0] << "\n";
+    std::cout << "extended edge: " << extendedEdge << "\n";
+    std::cout << "collision point: " << collisionPoint << "\n";
+    std::cout << "contains? " << closestEdges[0].containsPoint(collisionPoint) << "\n";
+
+    if (!closestEdges[0].containsPoint(collisionPoint)) {
+        return false;
+    }
 
     // Vector normal { -1, 0 }; // TODO
     // float theta = findAngleBetween(normal, -velocity);
