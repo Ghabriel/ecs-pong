@@ -1,8 +1,7 @@
 #pragma once
 
-#include <vector>
-#include "find-squared-distance.hpp"
 #include "../shapes/Line.hpp"
+#include "../shapes/Point.hpp"
 
 Point findCollisionPoint(const Line& l1, const Line& l2) {
     float dx = l1.point.x - l2.point.x;

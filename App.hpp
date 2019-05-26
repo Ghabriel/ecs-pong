@@ -44,7 +44,8 @@ class App : public react::Component<AppProps, AppState> {
 
         sf::CircleShape c(10);
         c.setFillColor(sf::Color::Red);
-        c.setPosition(760 - 10, 336 - 10);
+        // c.setPosition(760 - 10, 336 - 10);
+        c.setPosition(760 - 10, 305.143 - 10);
         window.draw(c);
 
         maestro.renderChild(leftPaddle, { state.boardArea, 20 });
