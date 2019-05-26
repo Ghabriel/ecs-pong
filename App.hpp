@@ -42,12 +42,6 @@ class App : public react::Component<AppProps, AppState> {
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
 
-        sf::CircleShape c(10);
-        c.setFillColor(sf::Color::Red);
-        // c.setPosition(760 - 10, 336 - 10);
-        c.setPosition(760 - 10, 305.143 - 10);
-        window.draw(c);
-
         maestro.renderChild(leftPaddle, { state.boardArea, 20 });
         maestro.renderChild(rightPaddle, { state.boardArea, 760 });
         maestro.renderChild(ball, { state.boardArea, state.handleBallMove });
