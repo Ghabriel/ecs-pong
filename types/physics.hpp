@@ -27,31 +27,32 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
     auto& [circle, velocity] = ball;
     auto& [center, radius] = circle;
 
-    Line ballTrajectory { center, velocity };
     std::vector<LineSegment> closestEdges = findClosestEdges(block, circle);
     Line extendedEdge = Line::fromSegment(closestEdges[0]);
+    Vector normal { -1, 0 }; // TODO
+
+    Point closestPoint = center - radius * normal;
+    Line ballTrajectory { closestPoint, velocity };
     Point collisionPoint = findCollisionPoint(ballTrajectory, extendedEdge);
 
     if (!closestEdges[0].containsPoint(collisionPoint)) {
         return false;
     }
 
-    Vector normal { -1, 0 }; // TODO
-
-    Vector centerToCollision = collisionPoint - center;
-    float squaredDistanceToCollision = centerToCollision.getSquaredNorm();
+    Vector ballToCollision = collisionPoint - closestPoint;
+    float squaredDistanceToCollision = ballToCollision.getSquaredNorm();
     if (normal.dot(velocity) > 0 || squaredDistanceToCollision > velocity.getSquaredNorm()) {
         return false;
     }
 
     float theta = findAngleBetween(-velocity, normal);
-    Point reflectedPosition = rotate(center, 2 * theta, collisionPoint);
+    Point reflectedPosition = rotate(closestPoint, 2 * theta, collisionPoint);
 
     if ((reflectedPosition - collisionPoint).getSquaredNorm() > 1e-3) {
-        Point projectedDestination = center + velocity;
+        Point projectedDestination = closestPoint + velocity;
         Vector depth = projectedDestination - collisionPoint;
         Vector reflectionDirection = (reflectedPosition - collisionPoint).normalize();
-        center = collisionPoint + depth.norm() * reflectionDirection;
+        center = collisionPoint + depth.norm() * reflectionDirection + radius * normal;
     }
 
     velocity = rotate(-velocity, 2 * theta);
