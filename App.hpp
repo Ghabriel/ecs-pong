@@ -12,19 +12,32 @@ struct AppProps { };
 
 struct AppState {
     sf::RectangleShape boardArea;
+    std::array<OrientedLineSegment, 4> borders;
     std::function<void(MovingCircle&)> handleBallMove;
 };
 
 class App : public react::Component<AppProps, AppState> {
  public:
     App() {
-        state.boardArea = sf::RectangleShape(sf::Vector2f(800, 600));
+        float width = 800;
+        float height = 600;
+        state.boardArea = sf::RectangleShape(sf::Vector2f(width, height));
+
+        Point corner { 0, 0 };
+        Rectangle board { corner, width, height };
+        state.borders = board.getOrientedEdges();
 
         state.handleBallMove = [this](MovingCircle& ball) {
             // std::cout << "left data: " << leftPaddle.getData() << "\n";
             // std::cout << "right data: " << rightPaddle.getData() << "\n";
 
-            bool deflected = interact(ball, leftPaddle.getData());
+            bool deflected = false;
+
+            for (const OrientedLineSegment& edge : state.borders) {
+                deflected = deflected || interact(ball, edge.segment, -edge.normal);
+            }
+
+            deflected = deflected || interact(ball, leftPaddle.getData());
             deflected = deflected || interact(ball, rightPaddle.getData());
 
             if (!deflected) {
