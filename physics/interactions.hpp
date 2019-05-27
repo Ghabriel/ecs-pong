@@ -23,19 +23,16 @@ Vector getNormalVector(const std::vector<OrientedLineSegment>& parts) {
     return normal.normalize();
 }
 
-bool interact(MovingCircle& ball, const Rectangle& block) {
+bool interact(MovingCircle& ball, const LineSegment& segment, const Vector& normal) {
     auto& [circle, velocity] = ball;
     auto& [center, radius] = circle;
 
-    std::vector<OrientedLineSegment> closestEdges = findClosestEdges(block, circle);
-    Line extendedEdge = Line::fromSegment(closestEdges[0].segment);
-
-    Vector normal = getNormalVector(closestEdges);
     Point closestPoint = center - radius * normal;
     Line ballTrajectory { closestPoint, velocity };
+    Line extendedEdge = Line::fromSegment(segment);
     Point collisionPoint = findCollisionPoint(ballTrajectory, extendedEdge);
 
-    if (!closestEdges[0].segment.containsPoint(collisionPoint)) {
+    if (!segment.containsPoint(collisionPoint)) {
         return false;
     }
 
@@ -58,4 +55,11 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
     velocity = rotate(-velocity, 2 * theta);
 
     return true;
+}
+
+bool interact(MovingCircle& ball, const Rectangle& block) {
+    std::vector<OrientedLineSegment> closestEdges = findClosestEdges(block, ball.circle);
+    Vector normal = getNormalVector(closestEdges);
+
+    return interact(ball, closestEdges[0].segment, normal);
 }

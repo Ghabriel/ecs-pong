@@ -14,7 +14,7 @@ struct LineSegment {
         return p2 - p1;
     }
 
-    bool containsPoint(const Point& p) {
+    bool containsPoint(const Point& p) const {
         float squaredLength = getSquaredLength();
         float d1 = (p - p1).norm();
         float d2 = (p - p2).norm();
