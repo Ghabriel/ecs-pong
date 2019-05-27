@@ -28,11 +28,7 @@ class App : public react::Component<AppProps, AppState> {
             deflected = deflected || interact(ball, rightPaddle.getData());
 
             if (!deflected) {
-                auto& [x, y] = ball.circle.center;
-                auto& [vx, vy] = ball.velocity;
-
-                x += vx;
-                y += vy;
+                ball.circle.center += ball.velocity;
             }
         };
     }

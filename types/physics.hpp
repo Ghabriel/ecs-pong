@@ -29,7 +29,12 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
 
     std::vector<OrientedLineSegment> closestEdges = findClosestEdges(block, circle);
     Line extendedEdge = Line::fromSegment(closestEdges[0].segment);
-    Vector& normal = closestEdges[0].normal; // TODO: handle multiple edges
+
+    Vector normal { 0, 0 };
+    for (OrientedLineSegment& edge : closestEdges) {
+        normal += edge.normal;
+    }
+    normal = normal.normalize();
 
     Point closestPoint = center - radius * normal;
     Line ballTrajectory { closestPoint, velocity };
