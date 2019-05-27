@@ -25,7 +25,7 @@ class Ball : public react::Component<BallProps, BallState> {
 
         Point center { x, y };
         Circle circle { center, radius };
-        Vector velocity { 3, 0.1 };
+        Vector velocity { 4, 0.1 };
         state.data = { circle, velocity };
 
         state.body = sf::CircleShape(radius);

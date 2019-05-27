@@ -24,10 +24,8 @@ class App : public react::Component<AppProps, AppState> {
             // std::cout << "left data: " << leftPaddle.getData() << "\n";
             // std::cout << "right data: " << rightPaddle.getData() << "\n";
 
-            // bool deflected = interact(ball, leftPaddle.getData());
-            // deflected = deflected || interact(ball, rightPaddle.getData());
-
-            bool deflected = interact(ball, rightPaddle.getData());
+            bool deflected = interact(ball, leftPaddle.getData());
+            deflected = deflected || interact(ball, rightPaddle.getData());
 
             if (!deflected) {
                 auto& [x, y] = ball.circle.center;

@@ -27,15 +27,15 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
     auto& [circle, velocity] = ball;
     auto& [center, radius] = circle;
 
-    std::vector<LineSegment> closestEdges = findClosestEdges(block, circle);
-    Line extendedEdge = Line::fromSegment(closestEdges[0]);
-    Vector normal { -1, 0 }; // TODO
+    std::vector<OrientedLineSegment> closestEdges = findClosestEdges(block, circle);
+    Line extendedEdge = Line::fromSegment(closestEdges[0].segment);
+    Vector& normal = closestEdges[0].normal; // TODO: handle multiple edges
 
     Point closestPoint = center - radius * normal;
     Line ballTrajectory { closestPoint, velocity };
     Point collisionPoint = findCollisionPoint(ballTrajectory, extendedEdge);
 
-    if (!closestEdges[0].containsPoint(collisionPoint)) {
+    if (!closestEdges[0].segment.containsPoint(collisionPoint)) {
         return false;
     }
 
