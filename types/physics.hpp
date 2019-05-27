@@ -23,6 +23,16 @@ struct MovingRectangle {
 #include <iostream>
 #include "debug.hpp"
 
+Vector getNormalVector(const std::vector<OrientedLineSegment>& parts) {
+    Vector normal { 0, 0 };
+
+    for (const OrientedLineSegment& edge : parts) {
+        normal += edge.normal;
+    }
+
+    return normal.normalize();
+}
+
 bool interact(MovingCircle& ball, const Rectangle& block) {
     auto& [circle, velocity] = ball;
     auto& [center, radius] = circle;
@@ -30,12 +40,7 @@ bool interact(MovingCircle& ball, const Rectangle& block) {
     std::vector<OrientedLineSegment> closestEdges = findClosestEdges(block, circle);
     Line extendedEdge = Line::fromSegment(closestEdges[0].segment);
 
-    Vector normal { 0, 0 };
-    for (OrientedLineSegment& edge : closestEdges) {
-        normal += edge.normal;
-    }
-    normal = normal.normalize();
-
+    Vector normal = getNormalVector(closestEdges);
     Point closestPoint = center - radius * normal;
     Line ballTrajectory { closestPoint, velocity };
     Point collisionPoint = findCollisionPoint(ballTrajectory, extendedEdge);
