@@ -3,7 +3,6 @@
 #include "../framework/Component.hpp"
 #include "../shapes/Point.hpp"
 #include "../shapes/Rectangle.hpp"
-#include "../types/physics.hpp"
 
 struct PaddleProps {
     sf::RectangleShape boardArea;

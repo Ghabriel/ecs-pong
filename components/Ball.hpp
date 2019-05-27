@@ -3,8 +3,8 @@
 #include <functional>
 #include "../framework/Component.hpp"
 #include "../shapes/Circle.hpp"
+#include "../shapes/MovingCircle.hpp"
 #include "../shapes/Point.hpp"
-#include "../types/physics.hpp"
 
 struct BallProps {
     sf::RectangleShape boardArea;

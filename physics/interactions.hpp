@@ -1,27 +1,17 @@
 #pragma once
 
 #include <vector>
-#include "../physics/find-angle-between.hpp"
-#include "../physics/find-closest-edges.hpp"
-#include "../physics/find-collision-point.hpp"
-#include "../physics/rotate.hpp"
-#include "../shapes/Circle.hpp"
 #include "../shapes/Line.hpp"
+#include "../shapes/MovingCircle.hpp"
 #include "../shapes/Point.hpp"
 #include "../shapes/Rectangle.hpp"
-
-struct MovingCircle {
-    Circle circle;
-    Vector velocity;
-};
-
-struct MovingRectangle {
-    Rectangle rectangle;
-    Vector velocity;
-};
+#include "find-angle-between.hpp"
+#include "find-closest-edges.hpp"
+#include "find-collision-point.hpp"
+#include "rotate.hpp"
 
 #include <iostream>
-#include "debug.hpp"
+#include "../debug.hpp"
 
 Vector getNormalVector(const std::vector<OrientedLineSegment>& parts) {
     Vector normal { 0, 0 };

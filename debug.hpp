@@ -1,12 +1,14 @@
 #pragma once
 
 #include <iostream>
-#include "physics.hpp"
-#include "../shapes/Circle.hpp"
-#include "../shapes/Line.hpp"
-#include "../shapes/LineSegment.hpp"
-#include "../shapes/Point.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "physics/interactions.hpp"
+#include "shapes/Circle.hpp"
+#include "shapes/Line.hpp"
+#include "shapes/LineSegment.hpp"
+#include "shapes/MovingCircle.hpp"
+#include "shapes/MovingRectangle.hpp"
+#include "shapes/Point.hpp"
+#include "shapes/Rectangle.hpp"
 
 std::ostream& operator<<(std::ostream& stream, const Point& p) {
     return stream << "(" << p.x << ", " << p.y << ")";

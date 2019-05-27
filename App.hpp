@@ -3,10 +3,10 @@
 #include <SFML/Graphics.hpp>
 #include "components/Ball.hpp"
 #include "components/Paddle.hpp"
+#include "debug.hpp"
 #include "framework/Component.hpp"
 #include "framework/Maestro.hpp"
-#include "types/debug.hpp"
-#include "types/physics.hpp"
+#include "physics/interactions.hpp"
 
 struct AppProps { };
 
