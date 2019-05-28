@@ -17,6 +17,25 @@ struct AppState {
     std::function<void(MovingCircle&)> handleBallMove;
 };
 
+void handlePaddleMove(MovingRectangle& paddle, const sf::RectangleShape& boardArea) {
+    auto& [rectangle, velocity] = paddle;
+    auto& [corner, width, height] = rectangle;
+
+    Point midPoint = rectangle.getMidPoint();
+    Point nextMidPoint = midPoint + velocity;
+    sf::Vector2f boardPosition = boardArea.getPosition();
+    float boardHeight = boardArea.getSize().y;
+    float boardBottomY = boardPosition.y + boardHeight;
+
+    if (nextMidPoint.y - height / 2 < boardPosition.y) {
+        corner.y = boardPosition.y;
+    } else if (nextMidPoint.y + height / 2 > boardBottomY) {
+        corner.y = boardBottomY - height;
+    } else {
+        corner += velocity;
+    }
+}
+
 class App : public react::Component<AppProps, AppState> {
  public:
     App() {
@@ -29,28 +48,10 @@ class App : public react::Component<AppProps, AppState> {
         state.borders = board.getOrientedEdges();
 
         state.handlePaddleMove = [this](MovingRectangle& paddle) {
-            auto& [rectangle, velocity] = paddle;
-            auto& [corner, width, height] = rectangle;
-
-            Point midPoint = rectangle.getMidPoint();
-            Point nextMidPoint = midPoint + velocity;
-            sf::Vector2f boardPosition = state.boardArea.getPosition();
-            float boardHeight = state.boardArea.getSize().y;
-            float boardBottomY = boardPosition.y + boardHeight;
-
-            if (nextMidPoint.y - height / 2 < boardPosition.y) {
-                corner.y = boardPosition.y;
-            } else if (nextMidPoint.y + height / 2 > boardBottomY) {
-                corner.y = boardBottomY - height;
-            } else {
-                corner += velocity;
-            }
+            handlePaddleMove(paddle, state.boardArea);
         };
 
         state.handleBallMove = [this](MovingCircle& ball) {
-            // std::cout << "left data: " << leftPaddle.getData() << "\n";
-            // std::cout << "right data: " << rightPaddle.getData() << "\n";
-
             bool deflected = false;
 
             for (const OrientedLineSegment& edge : state.borders) {
