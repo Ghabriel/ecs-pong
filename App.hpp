@@ -13,6 +13,7 @@ struct AppProps { };
 struct AppState {
     sf::RectangleShape boardArea;
     std::array<OrientedLineSegment, 4> borders;
+    std::function<void(MovingRectangle&)> handlePaddleMove;
     std::function<void(MovingCircle&)> handleBallMove;
 };
 
@@ -27,6 +28,25 @@ class App : public react::Component<AppProps, AppState> {
         Rectangle board { corner, width, height };
         state.borders = board.getOrientedEdges();
 
+        state.handlePaddleMove = [this](MovingRectangle& paddle) {
+            auto& [rectangle, velocity] = paddle;
+            auto& [corner, width, height] = rectangle;
+
+            Point midPoint = rectangle.getMidPoint();
+            Point nextMidPoint = midPoint + velocity;
+            sf::Vector2f boardPosition = state.boardArea.getPosition();
+            float boardHeight = state.boardArea.getSize().y;
+            float boardBottomY = boardPosition.y + boardHeight;
+
+            if (nextMidPoint.y - height / 2 < boardPosition.y) {
+                corner.y = boardPosition.y;
+            } else if (nextMidPoint.y + height / 2 > boardBottomY) {
+                corner.y = boardBottomY - height;
+            } else {
+                corner += velocity;
+            }
+        };
+
         state.handleBallMove = [this](MovingCircle& ball) {
             // std::cout << "left data: " << leftPaddle.getData() << "\n";
             // std::cout << "right data: " << rightPaddle.getData() << "\n";
@@ -37,8 +57,8 @@ class App : public react::Component<AppProps, AppState> {
                 deflected = deflected || interact(ball, edge.segment, -edge.normal);
             }
 
-            deflected = deflected || interact(ball, leftPaddle.getData());
-            deflected = deflected || interact(ball, rightPaddle.getData());
+            deflected = deflected || interact(ball, leftPaddle.getData().rectangle);
+            deflected = deflected || interact(ball, rightPaddle.getData().rectangle);
 
             if (!deflected) {
                 ball.circle.center += ball.velocity;
@@ -49,8 +69,8 @@ class App : public react::Component<AppProps, AppState> {
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
 
-        maestro.renderChild(leftPaddle, { state.boardArea, 20 });
-        maestro.renderChild(rightPaddle, { state.boardArea, 760 });
+        maestro.renderChild(leftPaddle, { state.boardArea, state.handlePaddleMove, 20 });
+        maestro.renderChild(rightPaddle, { state.boardArea, state.handlePaddleMove, 760 });
         maestro.renderChild(ball, { state.boardArea, state.handleBallMove });
     }
 

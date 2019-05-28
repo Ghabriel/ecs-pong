@@ -23,6 +23,10 @@ Vector getNormalVector(const std::vector<OrientedLineSegment>& parts) {
     return normal.normalize();
 }
 
+/**
+ * Interaction between a moving ball and a static line segment with a given
+ * normal vector. Bounces the ball if needed.
+ */
 bool interact(MovingCircle& ball, const LineSegment& segment, const Vector& normal) {
     auto& [circle, velocity] = ball;
     auto& [center, radius] = circle;
@@ -57,6 +61,10 @@ bool interact(MovingCircle& ball, const LineSegment& segment, const Vector& norm
     return true;
 }
 
+/**
+ * Interaction between a moving ball and a static rectangle. Bounces the ball
+ * if needed.
+ */
 bool interact(MovingCircle& ball, const Rectangle& block) {
     std::vector<OrientedLineSegment> closestEdges = findClosestEdges(block, ball.circle);
     Vector normal = getNormalVector(closestEdges);

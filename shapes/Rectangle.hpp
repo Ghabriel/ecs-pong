@@ -9,6 +9,10 @@ struct Rectangle {
     float width;
     float height;
 
+    Point getMidPoint() const {
+        return { corner.x + width / 2, corner.y + height / 2 };
+    }
+
     std::array<LineSegment, 4> getEdges() const {
         Point p2 { corner.x + width, corner.y };
         Point p3 { corner.x + width, corner.y + height };
