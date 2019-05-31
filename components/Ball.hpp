@@ -47,6 +47,10 @@ class Ball : public react::Component<BallProps, BallState> {
         window.draw(body);
     }
 
+    void reset() {
+        init();
+    }
+
  private:
     float getCentralizedX() const {
         auto& boardPosition = props.boardArea.getPosition();

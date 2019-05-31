@@ -60,6 +60,10 @@ class Paddle : public react::Component<PaddleProps, PaddleState> {
         return state.data;
     }
 
+    void reset() {
+        init();
+    }
+
  private:
     float getCentralizedY(float height) const {
         auto& boardPosition = props.boardArea.getPosition();

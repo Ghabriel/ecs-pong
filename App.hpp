@@ -15,6 +15,8 @@ struct AppState {
     std::array<OrientedLineSegment, 4> borders;
     std::function<void(MovingRectangle&)> handlePaddleMove;
     std::function<void(MovingCircle&)> handleBallMove;
+    unsigned leftScore = 0;
+    unsigned rightScore = 0;
 };
 
 void handlePaddleMove(MovingRectangle& paddle, const sf::RectangleShape& boardArea) {
@@ -36,6 +38,26 @@ void handlePaddleMove(MovingRectangle& paddle, const sf::RectangleShape& boardAr
     }
 }
 
+void updateBall(
+    MovingCircle& ball,
+    const std::array<OrientedLineSegment, 4>& borders,
+    const std::array<Rectangle, 2>& paddles
+) {
+    bool deflected = false;
+    auto& [topBorder, rightBorder, bottomBorder, leftBorder] = borders;
+
+    deflected = deflected || interact(ball, topBorder.segment, -topBorder.normal);
+    deflected = deflected || interact(ball, bottomBorder.segment, -bottomBorder.normal);
+
+    for (const Rectangle& paddle : paddles) {
+        deflected = deflected || interact(ball, paddle);
+    }
+
+    if (!deflected) {
+        ball.circle.center += ball.velocity;
+    }
+}
+
 class App : public react::Component<AppProps, AppState> {
  public:
     App() {
@@ -52,17 +74,20 @@ class App : public react::Component<AppProps, AppState> {
         };
 
         state.handleBallMove = [this](MovingCircle& ball) {
-            bool deflected = false;
+            auto& [topBorder, rightBorder, bottomBorder, leftBorder] = state.borders;
 
-            for (const OrientedLineSegment& edge : state.borders) {
-                deflected = deflected || interact(ball, edge.segment, -edge.normal);
-            }
-
-            deflected = deflected || interact(ball, leftPaddle.getData().rectangle);
-            deflected = deflected || interact(ball, rightPaddle.getData().rectangle);
-
-            if (!deflected) {
-                ball.circle.center += ball.velocity;
+            if (interact(ball, leftBorder.segment, -leftBorder.normal)) {
+                state.leftScore++;
+                reset();
+            } else if (interact(ball, rightBorder.segment, -rightBorder.normal)) {
+                state.rightScore++;
+                reset();
+            } else {
+                updateBall(
+                    ball,
+                    state.borders,
+                    { leftPaddle.getData().rectangle, rightPaddle.getData().rectangle }
+                );
             }
         };
     }
@@ -73,6 +98,12 @@ class App : public react::Component<AppProps, AppState> {
         maestro.renderChild(leftPaddle, { state.boardArea, state.handlePaddleMove, 20 });
         maestro.renderChild(rightPaddle, { state.boardArea, state.handlePaddleMove, 760 });
         maestro.renderChild(ball, { state.boardArea, state.handleBallMove });
+    }
+
+    void reset() {
+        leftPaddle.reset();
+        rightPaddle.reset();
+        ball.reset();
     }
 
  private:
