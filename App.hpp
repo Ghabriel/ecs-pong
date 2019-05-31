@@ -15,6 +15,9 @@ struct AppState {
     std::array<OrientedLineSegment, 4> borders;
     std::function<void(MovingRectangle&)> handlePaddleMove;
     std::function<void(MovingCircle&)> handleBallMove;
+    sf::Font font;
+
+    bool ballMoving = false;
     unsigned leftScore = 0;
     unsigned rightScore = 0;
 };
@@ -77,10 +80,10 @@ class App : public react::Component<AppProps, AppState> {
             auto& [topBorder, rightBorder, bottomBorder, leftBorder] = state.borders;
 
             if (interact(ball, leftBorder.segment, -leftBorder.normal)) {
-                state.leftScore++;
+                state.rightScore++;
                 reset();
             } else if (interact(ball, rightBorder.segment, -rightBorder.normal)) {
-                state.rightScore++;
+                state.leftScore++;
                 reset();
             } else {
                 updateBall(
@@ -90,17 +93,43 @@ class App : public react::Component<AppProps, AppState> {
                 );
             }
         };
+
+        state.font.loadFromFile("resources/arial.ttf");
     }
 
     void render(void* context, react::Maestro& maestro) override {
         auto& window = *static_cast<sf::RenderWindow*>(context);
 
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            state.ballMoving = true;
+        }
+
+        renderScoreboard(window);
+
         maestro.renderChild(leftPaddle, { state.boardArea, state.handlePaddleMove, 20 });
         maestro.renderChild(rightPaddle, { state.boardArea, state.handlePaddleMove, 760 });
-        maestro.renderChild(ball, { state.boardArea, state.handleBallMove });
+        maestro.renderChild(ball, { state.boardArea, state.handleBallMove, state.ballMoving });
+    }
+
+    void renderScoreboard(sf::RenderWindow& window) {
+        sf::Vector2f boardPosition = state.boardArea.getPosition();
+        float boardWidth = state.boardArea.getSize().x;
+
+        sf::Text scoreboard(
+            std::to_string(state.leftScore) + " - " + std::to_string(state.rightScore),
+            state.font
+        );
+        scoreboard.setCharacterSize(30);
+        scoreboard.setStyle(sf::Text::Bold);
+
+        float scoreboardWidth = scoreboard.getLocalBounds().width;
+        scoreboard.setPosition(sf::Vector2f((boardWidth - scoreboardWidth) / 2, 5));
+
+        window.draw(scoreboard);
     }
 
     void reset() {
+        state.ballMoving = false;
         leftPaddle.reset();
         rightPaddle.reset();
         ball.reset();

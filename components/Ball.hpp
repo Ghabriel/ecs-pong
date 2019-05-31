@@ -9,6 +9,7 @@
 struct BallProps {
     sf::RectangleShape boardArea;
     std::function<void(MovingCircle&)> onMoveAttempt;
+    bool moving = false;
 };
 
 struct BallState {
@@ -37,7 +38,9 @@ class Ball : public react::Component<BallProps, BallState> {
         sf::CircleShape& body = state.body;
         MovingCircle& data = state.data;
 
-        props.onMoveAttempt(data);
+        if (props.moving) {
+            props.onMoveAttempt(data);
+        }
 
         body.setPosition(
             data.circle.center.x - data.circle.radius,
