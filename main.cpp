@@ -1,12 +1,10 @@
 #include <SFML/Graphics.hpp>
-// #include "App.hpp"
-#include "framework/ComponentManager.hpp"
+#include "Game.hpp"
 
 int main(int, char**) {
     sf::RenderWindow window(sf::VideoMode(800, 600), "ECS Pong");
-    ecs::ComponentManager componentManager;
-    // react::Maestro maestro(&window);
-    // maestro.setRootComponent<App>();
+    Game game;
+    game.init();
 
     window.setFramerateLimit(60);
 
@@ -19,7 +17,7 @@ int main(int, char**) {
         }
 
         window.clear();
-        // maestro.render();
+        game.render();
         window.display();
     }
 }
