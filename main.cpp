@@ -1,11 +1,12 @@
 #include <SFML/Graphics.hpp>
-#include "App.hpp"
-#include "framework/Maestro.hpp"
+// #include "App.hpp"
+#include "framework/ComponentManager.hpp"
 
 int main(int, char**) {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "react.cpp");
-    react::Maestro maestro(&window);
-    maestro.setRootComponent<App>();
+    sf::RenderWindow window(sf::VideoMode(800, 600), "ECS Pong");
+    ecs::ComponentManager componentManager;
+    // react::Maestro maestro(&window);
+    // maestro.setRootComponent<App>();
 
     window.setFramerateLimit(60);
 
@@ -18,7 +19,7 @@ int main(int, char**) {
         }
 
         window.clear();
-        maestro.render();
+        // maestro.render();
         window.display();
     }
 }
