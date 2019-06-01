@@ -2,6 +2,7 @@
 
 #include <random>
 #include "../components/CircularObject.hpp"
+#include "../components/Drawable.hpp"
 #include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Circle.hpp"
@@ -43,6 +44,7 @@ Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
 
     Entity id = world.createEntity();
     world.addComponent<CircularObject>(id, { circle });
+    world.addComponent<Drawable>(id, {});
     world.addComponent<Velocity>(id, { velocity });
     return id;
 }

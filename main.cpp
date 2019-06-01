@@ -8,6 +8,8 @@ int main(int, char**) {
 
     window.setFramerateLimit(60);
 
+    sf::Clock clock;
+
     while (window.isOpen()) {
         sf::Event event;
         while (window.pollEvent(event)) {
@@ -17,7 +19,9 @@ int main(int, char**) {
         }
 
         window.clear();
-        game.render();
+        sf::Time elapsedTime = clock.restart();
+        game.update(elapsedTime);
+        game.render(window);
         window.display();
     }
 }

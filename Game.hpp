@@ -1,10 +1,13 @@
 #pragma once
 
+#include <iostream>
+#include <SFML/Graphics.hpp>
 #include "components/RectangularObject.hpp"
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
 #include "helpers/create-paddle.hpp"
 #include "shapes/Rectangle.hpp"
+#include "systems/render-world.hpp"
 
 using ecs::Entity;
 
@@ -24,8 +27,12 @@ class Game {
         createBall(world, boardArea);
     }
 
-    void render() {
-        // TODO
+    void update(const sf::Time& elapsedTime) {
+        std::cout << elapsedTime.asMicroseconds() << '\n';
+    }
+
+    void render(sf::RenderWindow& window) {
+        renderWorld(world, window);
     }
 
  private:
