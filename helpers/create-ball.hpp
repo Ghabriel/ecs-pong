@@ -36,10 +36,8 @@ Vector generateVelocity() {
 
 Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
     constexpr float radius = 10;
-    float x = boardArea.corner.x + (boardArea.width / 2);
-    float y = boardArea.corner.y + (boardArea.height / 2);
 
-    Point center { x, y };
+    Point center = boardArea.getMidPoint();
     Circle circle { center, radius };
     Vector velocity = generateVelocity();
 
