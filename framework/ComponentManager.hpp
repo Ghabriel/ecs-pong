@@ -1,5 +1,6 @@
 #pragma once
 
+#include "DataQuery.hpp"
 #include "ECS.hpp"
 
 namespace ecs {
@@ -27,6 +28,9 @@ namespace ecs {
 
         template<typename T, typename... Args>
         void notify(Args&&...);
+
+        template<typename T>
+        DataQuery<T> findAll();
 
      private:
         ECS storage;
@@ -93,5 +97,10 @@ namespace ecs {
         query<T>([&](Entity, T& listener) {
             listener.fn(std::forward<Args>(args)...);
         });
+    }
+
+    template<typename T>
+    inline DataQuery<T> ComponentManager::findAll() {
+        return DataQuery<T>(storage);
     }
 }

@@ -9,20 +9,22 @@
 #include "../shapes/Rectangle.hpp"
 
 void renderCircles(ecs::ComponentManager& world, sf::RenderWindow& window) {
-    world.query<Drawable, CircularObject>(
-        [&window](Entity, Drawable, const CircularObject& obj) {
-            const Circle& body = obj.body;
-            sf::CircleShape circle(body.radius);
-            circle.setFillColor(sf::Color::White);
+    world.findAll<Drawable>()
+        .join<CircularObject>()
+        .forEach<CircularObject>(
+            [&window](const CircularObject& obj) {
+                const Circle& body = obj.body;
+                sf::CircleShape circle(body.radius);
+                circle.setFillColor(sf::Color::White);
 
-            circle.setPosition(
-                body.center.x - body.radius,
-                body.center.y - body.radius
-            );
+                circle.setPosition(
+                    body.center.x - body.radius,
+                    body.center.y - body.radius
+                );
 
-            window.draw(circle);
-        }
-    );
+                window.draw(circle);
+            }
+        );
 }
 
 void renderRectangles(ecs::ComponentManager& world, sf::RenderWindow& window) {
