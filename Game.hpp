@@ -32,8 +32,9 @@ void createScoreListeners(
         }
     };
 
-    Entity id = world.createEntity();
-    world.addComponent<ScoreListener>(id, { callback });
+    world.createEntity(
+        ScoreListener { callback }
+    );
 }
 
 Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {

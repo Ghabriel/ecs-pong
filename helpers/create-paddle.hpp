@@ -16,9 +16,9 @@ Entity createPaddle(ecs::ComponentManager& world, const Rectangle& boardArea, fl
     Point corner { x, y };
     Rectangle rectangle { corner, width, height };
 
-    Entity id = world.createEntity();
-    world.addComponent<Bounds>(id, { 0, boardArea.height });
-    world.addComponent<Drawable>(id, {});
-    world.addComponent<RectangularObject>(id, { rectangle });
-    return id;
+    return world.createEntity(
+        Bounds { 0, boardArea.height },
+        Drawable { },
+        RectangularObject { rectangle }
+    );
 }

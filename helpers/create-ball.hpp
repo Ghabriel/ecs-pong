@@ -43,19 +43,21 @@ Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
     Point center = boardArea.getMidPoint();
     Circle circle { center, radius };
 
-    Entity id = world.createEntity();
-    world.addComponent<CircularObject>(id, { circle });
-    world.addComponent<Drawable>(id, {});
-    world.addComponent<ScoringBounds>(id, { 0, boardArea.width });
-    world.addComponent<Velocity>(id, { generateVelocity() });
+    Entity id = world.createEntity(
+        CircularObject { circle },
+        Drawable { },
+        ScoringBounds { 0, boardArea.width },
+        Velocity { generateVelocity() }
+    );
 
     auto scoringCallback = [&world, id, circle](Team) {
         world.getData<CircularObject>(id) = CircularObject { circle };
         world.getData<Velocity>(id) = Velocity { generateVelocity() };
     };
 
-    Entity scoreListener = world.createEntity();
-    world.addComponent<ScoreListener>(scoreListener, { scoringCallback });
+    world.createEntity(
+        ScoreListener { scoringCallback }
+    );
 
     return id;
 }

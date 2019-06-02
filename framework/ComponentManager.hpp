@@ -6,7 +6,8 @@
 namespace ecs {
     class ComponentManager {
      public:
-        Entity createEntity();
+        template<typename... Ts>
+        Entity createEntity(Ts&&...);
 
         template<typename T>
         void addComponent(Entity, T&&);
@@ -37,8 +38,11 @@ namespace ecs {
     };
 
 
-    inline Entity ComponentManager::createEntity() {
-        return storage.nextEntityId++;
+    template<typename... Ts>
+    inline Entity ComponentManager::createEntity(Ts&&... data) {
+        Entity id = storage.nextEntityId++;
+        (addComponent<Ts>(id, std::forward<Ts>(data)), ...);
+        return id;
     }
 
     template<typename T>
