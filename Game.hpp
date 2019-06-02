@@ -2,12 +2,14 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "components/Input.hpp"
 #include "components/RectangularObject.hpp"
 #include "components/ScoreListener.hpp"
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
 #include "helpers/create-paddle.hpp"
 #include "shapes/Rectangle.hpp"
+#include "systems/input-system.hpp"
 #include "systems/render-world.hpp"
 #include "systems/movement-system.hpp"
 #include "systems/rectangle-bounds-system.hpp"
@@ -38,7 +40,9 @@ void createScoreListeners(
 }
 
 Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    return createPaddle(world, boardArea, 20);
+    Entity id = createPaddle(world, boardArea, 20);
+    world.addComponent<Input>(id, { });
+    return id;
 }
 
 Entity createRightPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
@@ -59,6 +63,7 @@ class Game {
         unsigned elapsedTimeMicro = elapsedTime.asMicroseconds();
         float normalizedElapsedTime = elapsedTimeMicro / 1000000.0;
 
+        applyInput(world);
         applyMovement(world, normalizedElapsedTime);
         applyRectangleBounds(world);
         applyScoring(world);

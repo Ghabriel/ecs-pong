@@ -4,6 +4,7 @@
 #include "../components/Bounds.hpp"
 #include "../components/CircularObject.hpp"
 #include "../components/Drawable.hpp"
+#include "../components/Input.hpp"
 #include "../components/RectangularObject.hpp"
 #include "../components/ScoreListener.hpp"
 #include "../components/ScoringBounds.hpp"
@@ -32,6 +33,7 @@ namespace ecs {
         Bounds,
         CircularObject,
         Drawable,
+        Input,
         RectangularObject,
         ScoreListener,
         ScoringBounds,
