@@ -7,6 +7,7 @@ int main(int, char**) {
     game.init();
 
     window.setFramerateLimit(60);
+    window.setPosition({200, 200});
 
     sf::Clock clock;
 

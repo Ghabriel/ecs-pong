@@ -3,14 +3,38 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "components/RectangularObject.hpp"
+#include "components/ScoreListener.hpp"
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
 #include "helpers/create-paddle.hpp"
 #include "shapes/Rectangle.hpp"
 #include "systems/render-world.hpp"
-#include "systems/update-world.hpp"
+#include "systems/movement-system.hpp"
+#include "systems/rectangle-bounds-system.hpp"
+#include "systems/scoring-system.hpp"
 
 using ecs::Entity;
+
+void createScoreListeners(
+    ecs::ComponentManager& world,
+    std::pair<unsigned, unsigned>& score
+) {
+    auto callback = [&score](Team team) {
+        switch (team) {
+            case Team::Left:
+                std::cout << "Left scored\n";
+                score.first++;
+                break;
+            case Team::Right:
+                std::cout << "Right scored\n";
+                score.second++;
+                break;
+        }
+    };
+
+    Entity id = world.createEntity();
+    world.addComponent<ScoreListener>(id, { callback });
+}
 
 Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
     return createPaddle(world, boardArea, 20);
@@ -23,6 +47,8 @@ Entity createRightPaddle(ecs::ComponentManager& world, const Rectangle& boardAre
 class Game {
  public:
     void init() {
+        Rectangle boardArea { {0, 0}, 800, 600 };
+        createScoreListeners(world, score);
         createLeftPaddle(world, boardArea);
         createRightPaddle(world, boardArea);
         createBall(world, boardArea);
@@ -31,7 +57,10 @@ class Game {
     void update(const sf::Time& elapsedTime) {
         unsigned elapsedTimeMicro = elapsedTime.asMicroseconds();
         float normalizedElapsedTime = elapsedTimeMicro / 1000000.0;
-        updateWorld(world, normalizedElapsedTime, boardArea);
+
+        applyMovement(world, normalizedElapsedTime);
+        applyRectangleBounds(world);
+        applyScoring(world);
     }
 
     void render(sf::RenderWindow& window) {
@@ -40,5 +69,5 @@ class Game {
 
  private:
     ecs::ComponentManager world;
-    Rectangle boardArea { {0, 0}, 800, 600 };
+    std::pair<unsigned, unsigned> score;
 };

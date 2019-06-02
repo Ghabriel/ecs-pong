@@ -1,5 +1,6 @@
 #pragma once
 
+#include "../components/Bounds.hpp"
 #include "../components/Drawable.hpp"
 #include "../components/RectangularObject.hpp"
 #include "../framework/ComponentManager.hpp"
@@ -16,6 +17,7 @@ Entity createPaddle(ecs::ComponentManager& world, const Rectangle& boardArea, fl
     Rectangle rectangle { corner, width, height };
 
     Entity id = world.createEntity();
+    world.addComponent<Bounds>(id, { 0, boardArea.height });
     world.addComponent<Drawable>(id, {});
     world.addComponent<RectangularObject>(id, { rectangle });
     return id;

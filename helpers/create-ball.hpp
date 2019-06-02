@@ -3,6 +3,8 @@
 #include <random>
 #include "../components/CircularObject.hpp"
 #include "../components/Drawable.hpp"
+#include "../components/ScoreListener.hpp"
+#include "../components/ScoringBounds.hpp"
 #include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Circle.hpp"
@@ -40,11 +42,20 @@ Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
 
     Point center = boardArea.getMidPoint();
     Circle circle { center, radius };
-    Vector velocity = generateVelocity();
 
     Entity id = world.createEntity();
     world.addComponent<CircularObject>(id, { circle });
     world.addComponent<Drawable>(id, {});
-    world.addComponent<Velocity>(id, { velocity });
+    world.addComponent<ScoringBounds>(id, { 0, boardArea.width });
+    world.addComponent<Velocity>(id, { generateVelocity() });
+
+    auto scoringCallback = [&world, id, circle](Team) {
+        world.getData<CircularObject>(id) = CircularObject { circle };
+        world.getData<Velocity>(id) = Velocity { generateVelocity() };
+    };
+
+    Entity scoreListener = world.createEntity();
+    world.addComponent<ScoreListener>(scoreListener, { scoringCallback });
+
     return id;
 }

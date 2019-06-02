@@ -1,9 +1,12 @@
 #pragma once
 
 #include <unordered_map>
+#include "../components/Bounds.hpp"
 #include "../components/CircularObject.hpp"
 #include "../components/Drawable.hpp"
 #include "../components/RectangularObject.hpp"
+#include "../components/ScoreListener.hpp"
+#include "../components/ScoringBounds.hpp"
 #include "../components/Velocity.hpp"
 
 namespace ecs {
@@ -14,9 +17,12 @@ namespace ecs {
 
     struct ECS {
         Entity nextEntityId = 0;
+        ComponentData<Bounds> bounds;
         ComponentData<CircularObject> circularObjects;
         ComponentData<Drawable> drawables;
         ComponentData<RectangularObject> rectangularObjects;
+        ComponentData<ScoreListener> scoreListeners;
+        ComponentData<ScoringBounds> scoringBounds;
         ComponentData<Velocity> velocities;
     };
 
@@ -25,6 +31,16 @@ namespace ecs {
 
     template<typename T>
     constexpr const ComponentData<T>& entityData(const ECS&);
+
+    template<>
+    constexpr ComponentData<Bounds>& entityData(ECS& ecs) {
+        return ecs.bounds;
+    }
+
+    template<>
+    constexpr const ComponentData<Bounds>& entityData(const ECS& ecs) {
+        return ecs.bounds;
+    }
 
     template<>
     constexpr ComponentData<CircularObject>& entityData(ECS& ecs) {
@@ -54,6 +70,26 @@ namespace ecs {
     template<>
     constexpr const ComponentData<RectangularObject>& entityData(const ECS& ecs) {
         return ecs.rectangularObjects;
+    }
+
+    template<>
+    constexpr ComponentData<ScoreListener>& entityData(ECS& ecs) {
+        return ecs.scoreListeners;
+    }
+
+    template<>
+    constexpr const ComponentData<ScoreListener>& entityData(const ECS& ecs) {
+        return ecs.scoreListeners;
+    }
+
+    template<>
+    constexpr ComponentData<ScoringBounds>& entityData(ECS& ecs) {
+        return ecs.scoringBounds;
+    }
+
+    template<>
+    constexpr const ComponentData<ScoringBounds>& entityData(const ECS& ecs) {
+        return ecs.scoringBounds;
     }
 
     template<>
