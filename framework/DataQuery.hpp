@@ -1,8 +1,23 @@
 #pragma once
 
+#include <type_traits>
 #include "ECS.hpp"
+#include "lambda-argument-types.hpp"
 
 namespace ecs {
+    namespace __detail {
+        template<typename T>
+        struct Dispatcher;
+
+        template<typename... Ts>
+        struct Dispatcher<std::tuple<Ts...>> {
+            template<typename Functor>
+            void operator()(ECS& storage, Functor fn, Entity entity) {
+                fn(entityData<std::decay_t<Ts>>(storage).at(entity)...);
+            }
+        };
+    }
+
     template<typename T, typename... Ts>
     class DataQuery {
     public:
@@ -13,19 +28,21 @@ namespace ecs {
             return DataQuery<T, Ts..., U>(storage);
         }
 
-        template<typename... Us, typename Functor>
+        template<typename Functor>
         void forEach(Functor fn) {
+            __detail::Dispatcher<lambda_argument_types_t<Functor>> dispatcher;
+
             auto& allEntitiesData = entityData<T>(storage);
 
             if constexpr (sizeof...(Ts) > 0) {
                 for (auto& [entity, data] : allEntitiesData) {
                     if (hasAllComponents<Ts...>(entity)) {
-                        fn(getData<Us>(entity)...);
+                        dispatcher(storage, fn, entity);
                     }
                 }
             } else {
                 for (auto& [entity, data] : allEntitiesData) {
-                    fn(entity, data);
+                    dispatcher(storage, fn, entity);
                 }
             }
         }
@@ -47,11 +64,6 @@ namespace ecs {
             } else {
                 return hasT;
             }
-        }
-
-        template<typename U>
-        U& getData(Entity entity) {
-            return entityData<U>(storage).at(entity);
         }
     };
 }

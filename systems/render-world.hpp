@@ -11,7 +11,7 @@
 void renderCircles(ecs::ComponentManager& world, sf::RenderWindow& window) {
     world.findAll<Drawable>()
         .join<CircularObject>()
-        .forEach<CircularObject>(
+        .forEach(
             [&window](const CircularObject& obj) {
                 const Circle& body = obj.body;
                 sf::CircleShape circle(body.radius);
