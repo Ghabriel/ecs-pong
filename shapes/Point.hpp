@@ -46,6 +46,10 @@ Point operator*(float scalar, const Point& p) {
     return { scalar * p.x, scalar * p.y };
 }
 
+Point operator*(const Point& p, float scalar) {
+    return { scalar * p.x, scalar * p.y };
+}
+
 Point operator/(const Point& p, float scalar) {
     return { p.x / scalar, p.y / scalar };
 }

@@ -12,12 +12,12 @@ using ecs::Entity;
 Vector generateVelocity() {
     std::random_device randomDevice;
     std::mt19937 generator(randomDevice());
-    std::uniform_int_distribution<int> dist(-5, 5);
+    std::uniform_int_distribution<int> dist(-500, 500);
     int x = 0;
     int y = 0;
     int squaredSpeed = 0;
 
-    while (squaredSpeed < 20 || squaredSpeed > 50) {
+    while (squaredSpeed < 250000 || squaredSpeed > 320000) {
         x = 0;
         y = 0;
 

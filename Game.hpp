@@ -8,6 +8,7 @@
 #include "helpers/create-paddle.hpp"
 #include "shapes/Rectangle.hpp"
 #include "systems/render-world.hpp"
+#include "systems/update-world.hpp"
 
 using ecs::Entity;
 
@@ -28,7 +29,9 @@ class Game {
     }
 
     void update(const sf::Time& elapsedTime) {
-        std::cout << elapsedTime.asMicroseconds() << '\n';
+        unsigned elapsedTimeMicro = elapsedTime.asMicroseconds();
+        float normalizedElapsedTime = elapsedTimeMicro / 1000000.0;
+        updateWorld(world, normalizedElapsedTime, boardArea);
     }
 
     void render(sf::RenderWindow& window) {
