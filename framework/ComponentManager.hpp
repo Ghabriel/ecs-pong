@@ -25,6 +25,9 @@ namespace ecs {
         template<typename T, typename... Ts, typename Functor>
         void query(Functor fn);
 
+        template<typename T, typename... Args>
+        void notify(Args&&...);
+
      private:
         ECS storage;
     };
@@ -83,5 +86,12 @@ namespace ecs {
                 fn(entity, data);
             }
         }
+    }
+
+    template<typename T, typename... Args>
+    inline void ComponentManager::notify(Args&&... args) {
+        query<T>([&](Entity, T& listener) {
+            listener.fn(std::forward<Args>(args)...);
+        });
     }
 }

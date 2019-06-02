@@ -14,10 +14,7 @@ void applyScoring(ecs::ComponentManager& world) {
 
             if (x <= bounds.lowerBound || x >= bounds.upperBound) {
                 Team scoringTeam = (x <= bounds.lowerBound) ? Team::Right : Team::Left;
-
-                world.query<ScoreListener>([scoringTeam](Entity, ScoreListener& listener) {
-                    listener.fn(scoringTeam);
-                });
+                world.notify<ScoreListener>(scoringTeam);
             }
         }
     );
