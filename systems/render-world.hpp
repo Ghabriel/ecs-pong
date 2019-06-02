@@ -28,17 +28,19 @@ void renderCircles(ecs::ComponentManager& world, sf::RenderWindow& window) {
 }
 
 void renderRectangles(ecs::ComponentManager& world, sf::RenderWindow& window) {
-    world.query<Drawable, RectangularObject>(
-        [&window](Entity, Drawable, const RectangularObject& obj) {
-            const Rectangle& body = obj.body;
-            sf::RectangleShape rect(sf::Vector2f(body.width, body.height));
-            rect.setFillColor(sf::Color::White);
+    world.findAll<Drawable>()
+        .join<RectangularObject>()
+        .forEach(
+            [&window](const RectangularObject& obj) {
+                const Rectangle& body = obj.body;
+                sf::RectangleShape rect(sf::Vector2f(body.width, body.height));
+                rect.setFillColor(sf::Color::White);
 
-            rect.setPosition(body.corner.x, body.corner.y);
+                rect.setPosition(body.corner.x, body.corner.y);
 
-            window.draw(rect);
-        }
-    );
+                window.draw(rect);
+            }
+        );
 }
 
 void renderWorld(ecs::ComponentManager& world, sf::RenderWindow& window) {
