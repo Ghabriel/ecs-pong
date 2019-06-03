@@ -7,10 +7,9 @@
 #include "../shapes/Circle.hpp"
 
 void applyScoring(ecs::ComponentManager& world) {
-    world.query<ScoringBounds, CircularObject>(
-        [&world](Entity, const ScoringBounds& bounds, CircularObject& obj) {
-            Circle& body = obj.body;
-            float x = body.center.x;
+    world.query<ScoringBounds, Position>(
+        [&world](ecs::Entity, const ScoringBounds& bounds, const Position& pos) {
+            float x = pos.location.x;
 
             if (x <= bounds.lowerBound || x >= bounds.upperBound) {
                 Team scoringTeam = (x <= bounds.lowerBound) ? Team::Right : Team::Left;

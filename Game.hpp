@@ -4,6 +4,7 @@
 #include <SFML/Graphics.hpp>
 #include "components/Input.hpp"
 #include "components/RectangularObject.hpp"
+#include "components/Scoreboard.hpp"
 #include "components/ScoreListener.hpp"
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
@@ -17,26 +18,28 @@
 
 using ecs::Entity;
 
-void createScoreListeners(
-    ecs::ComponentManager& world,
-    std::pair<unsigned, unsigned>& score
-) {
-    auto callback = [&score](Team team) {
+void createScoreboard(ecs::ComponentManager& world, const Rectangle& boardArea) {
+    Entity id = world.createEntity(
+        Scoreboard { { 0, 0 } },
+        Position { boardArea.width / 2, 30 }
+    );
+
+    auto callback = [&world, id](Team team) {
+        Scoreboard& scoreboard = world.getData<Scoreboard>(id);
+        std::pair<unsigned, unsigned>& scores = scoreboard.scores;
         switch (team) {
             case Team::Left:
                 std::cout << "Left scored\n";
-                score.first++;
+                scores.first++;
                 break;
             case Team::Right:
                 std::cout << "Right scored\n";
-                score.second++;
+                scores.second++;
                 break;
         }
     };
 
-    world.createEntity(
-        ScoreListener { callback }
-    );
+    world.addComponent<ScoreListener>(id, { callback });
 }
 
 Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
@@ -53,7 +56,7 @@ class Game {
  public:
     void init() {
         Rectangle boardArea { {0, 0}, 800, 600 };
-        createScoreListeners(world, score);
+        createScoreboard(world, boardArea);
         createLeftPaddle(world, boardArea);
         createRightPaddle(world, boardArea);
         createBall(world, boardArea);
@@ -75,5 +78,4 @@ class Game {
 
  private:
     ecs::ComponentManager world;
-    std::pair<unsigned, unsigned> score;
 };

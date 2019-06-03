@@ -7,12 +7,11 @@
 #include "../shapes/Rectangle.hpp"
 
 void applyRectangleBounds(ecs::ComponentManager& world) {
-    world.query<Bounds, RectangularObject>(
-        [](Entity, const Bounds& bounds, RectangularObject& obj) {
-            Rectangle& body = obj.body;
-            float lowerBound = bounds.lowerBound;
-            float upperBound = bounds.upperBound - body.height;
-            float& y = body.corner.y;
+    world.query<Bounds, Position, RectangularObject>(
+        [](ecs::Entity, const Bounds& bounds, Position& pos, const RectangularObject& obj) {
+            float lowerBound = bounds.lowerBound + obj.height / 2;
+            float upperBound = bounds.upperBound - obj.height / 2;
+            float& y = pos.location.y;
 
             y = std::clamp(y, lowerBound, upperBound);
         }

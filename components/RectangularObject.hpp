@@ -1,7 +1,6 @@
 #pragma once
 
-#include "../shapes/Rectangle.hpp"
-
 struct RectangularObject {
-    Rectangle body;
+    float width;
+    float height;
 };

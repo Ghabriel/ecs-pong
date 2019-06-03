@@ -6,7 +6,7 @@
 
 void applyInput(ecs::ComponentManager& world) {
     world.query<Input>(
-        [&world](Entity id, Input) {
+        [&world](ecs::Entity id, Input) {
             Vector velocity;
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Up)) {
                 velocity = { 0, -350 };

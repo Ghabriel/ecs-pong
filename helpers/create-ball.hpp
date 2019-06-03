@@ -3,13 +3,13 @@
 #include <random>
 #include "../components/CircularObject.hpp"
 #include "../components/Drawable.hpp"
+#include "../components/Position.hpp"
 #include "../components/ScoreListener.hpp"
 #include "../components/ScoringBounds.hpp"
 #include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Circle.hpp"
-
-using ecs::Entity;
+#include "../shapes/Rectangle.hpp"
 
 Vector generateVelocity() {
     std::random_device randomDevice;
@@ -37,21 +37,21 @@ Vector generateVelocity() {
     return { static_cast<float>(x), static_cast<float>(y) };
 }
 
-Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
+ecs::Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
     constexpr float radius = 10;
 
-    Point center = boardArea.getMidPoint();
-    Circle circle { center, radius };
+    Point midPoint = boardArea.getMidPoint();
 
-    Entity id = world.createEntity(
-        CircularObject { circle },
+    ecs::Entity id = world.createEntity(
+        CircularObject { radius },
         Drawable { },
+        Position { midPoint },
         ScoringBounds { 0, boardArea.width },
         Velocity { generateVelocity() }
     );
 
-    auto scoringCallback = [&world, id, circle](Team) {
-        world.getData<CircularObject>(id) = CircularObject { circle };
+    auto scoringCallback = [&world, id, midPoint](Team) {
+        world.getData<Position>(id) = { midPoint };
         world.getData<Velocity>(id) = Velocity { generateVelocity() };
     };
 
