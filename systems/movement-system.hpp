@@ -1,13 +1,51 @@
 #pragma once
 
+#include "../components/CircularObject.hpp"
 #include "../components/Position.hpp"
+#include "../components/RectangularObject.hpp"
 #include "../components/Velocity.hpp"
+#include "../components/Wall.hpp"
 #include "../framework/ComponentManager.hpp"
+#include "../physics/interactions.hpp"
+#include "../shapes/Circle.hpp"
+#include "../shapes/MovingCircle.hpp"
+#include "../shapes/Rectangle.hpp"
 
 void applyMovement(ecs::ComponentManager& world, float elapsedTime) {
-    world.query<Velocity, Position>(
-        [elapsedTime](ecs::Entity, Velocity& v, Position& pos) {
-            pos.location += v.value * elapsedTime;
+    world.query<Velocity, Position, CircularObject>(
+        [&world, elapsedTime](ecs::Entity, Velocity& v, Position& pos, const CircularObject& obj) {
+            Circle body { pos.location, obj.radius };
+            Vector velocity = v.value * elapsedTime;
+            MovingCircle ball { body, velocity };
+
+            bool deflected = false;
+
+            world.query<Wall>([&ball, &deflected](ecs::Entity, const Wall& wall) {
+                deflected = deflected || interact(ball, wall.body.segment, wall.body.normal);
+            });
+
+            if (!deflected) {
+                world.query<Position, RectangularObject>(
+                    [&ball, &deflected](ecs::Entity, const Position& pos, const RectangularObject& obj) {
+                        Rectangle paddle { pos.location, obj.width, obj.height };
+                        deflected = deflected || interact(ball, paddle);
+                    }
+                );
+            }
+
+            if (!deflected) {
+                ball.circle.center += ball.velocity;
+            }
+
+            pos.location = ball.circle.center;
+            v.value = ball.velocity / elapsedTime;
         }
     );
+
+    world.findAll<Velocity>()
+        .join<Position>()
+        .join<RectangularObject>()
+        .forEach([elapsedTime](Velocity& v, Position& pos) {
+            pos.location += v.value * elapsedTime;
+        });
 }

@@ -6,6 +6,7 @@
 #include "components/RectangularObject.hpp"
 #include "components/Scoreboard.hpp"
 #include "components/ScoreListener.hpp"
+#include "components/Wall.hpp"
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
 #include "helpers/create-paddle.hpp"
@@ -17,6 +18,18 @@
 #include "systems/scoring-system.hpp"
 
 using ecs::Entity;
+
+void createWalls(ecs::ComponentManager& world, const Rectangle& boardArea) {
+    Point upperLeft { 0, 0 };
+    Point upperRight { boardArea.width, 0 };
+    Point lowerLeft { 0, boardArea.height };
+    Point lowerRight { boardArea.width, boardArea.height };
+    LineSegment upperSegment { upperLeft, upperRight };
+    LineSegment lowerSegment { lowerLeft, lowerRight };
+
+    world.createEntity(Wall { { upperSegment, { 0, 1 } } });
+    world.createEntity(Wall { { lowerSegment, { 0, -1 } } });
+}
 
 void createScoreboard(ecs::ComponentManager& world, const Rectangle& boardArea) {
     Entity id = world.createEntity(
@@ -56,6 +69,7 @@ class Game {
  public:
     void init() {
         Rectangle boardArea { {0, 0}, 800, 600 };
+        createWalls(world, boardArea);
         createScoreboard(world, boardArea);
         createLeftPaddle(world, boardArea);
         createRightPaddle(world, boardArea);

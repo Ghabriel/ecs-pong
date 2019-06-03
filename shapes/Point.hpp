@@ -54,4 +54,8 @@ Point operator/(const Point& p, float scalar) {
     return { p.x / scalar, p.y / scalar };
 }
 
+bool operator==(const Point& lhs, const Point& rhs) {
+    return lhs.x == rhs.x && lhs.y == rhs.y;
+}
+
 using Vector = Point;

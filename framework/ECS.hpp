@@ -11,6 +11,7 @@
 #include "../components/ScoreListener.hpp"
 #include "../components/ScoringBounds.hpp"
 #include "../components/Velocity.hpp"
+#include "../components/Wall.hpp"
 
 namespace ecs {
     using Entity = unsigned;
@@ -41,7 +42,8 @@ namespace ecs {
         Scoreboard,
         ScoreListener,
         ScoringBounds,
-        Velocity
+        Velocity,
+        Wall
     >;
 
     template<typename T>
