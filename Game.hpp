@@ -2,11 +2,6 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
-#include "components/Input.hpp"
-#include "components/RectangularObject.hpp"
-#include "components/Scoreboard.hpp"
-#include "components/ScoreListener.hpp"
-#include "components/Wall.hpp"
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
 #include "helpers/create-paddle.hpp"

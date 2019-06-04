@@ -1,7 +1,5 @@
 #pragma once
 
-#include "../components/Input.hpp"
-#include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
 
 void useInputSystem(ecs::ComponentManager& world) {

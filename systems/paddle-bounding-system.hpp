@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../components/RectangularObject.hpp"
 #include "../framework/ComponentManager.hpp"
 
 void usePaddleBoundingSystem(ecs::ComponentManager& world) {

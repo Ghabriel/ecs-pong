@@ -1,11 +1,6 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include "../components/CircularObject.hpp"
-#include "../components/Drawable.hpp"
-#include "../components/Position.hpp"
-#include "../components/RectangularObject.hpp"
-#include "../components/Scoreboard.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Circle.hpp"
 #include "../shapes/Rectangle.hpp"

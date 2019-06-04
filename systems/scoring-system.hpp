@@ -1,10 +1,6 @@
 #pragma once
 
-#include "../components/CircularObject.hpp"
-#include "../components/ScoreListener.hpp"
-#include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
-#include "../shapes/Circle.hpp"
 
 void useScoringSystem(ecs::ComponentManager& world) {
     world.query<ScoringBounds, Position>(

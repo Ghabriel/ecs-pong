@@ -1,10 +1,5 @@
 #pragma once
 
-#include "../components/CircularObject.hpp"
-#include "../components/Position.hpp"
-#include "../components/RectangularObject.hpp"
-#include "../components/Velocity.hpp"
-#include "../components/Wall.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../physics/interactions.hpp"
 #include "../shapes/Circle.hpp"
