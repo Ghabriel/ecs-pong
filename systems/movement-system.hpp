@@ -27,7 +27,11 @@ void applyMovement(ecs::ComponentManager& world, float elapsedTime) {
             if (!deflected) {
                 world.query<Position, RectangularObject>(
                     [&ball, &deflected](ecs::Entity, const Position& pos, const RectangularObject& obj) {
-                        Rectangle paddle { pos.location, obj.width, obj.height };
+                        Point paddleCorner {
+                            pos.location.x - obj.width / 2,
+                            pos.location.y - obj.height / 2
+                        };
+                        Rectangle paddle { paddleCorner, obj.width, obj.height };
                         deflected = deflected || interact(ball, paddle);
                     }
                 );
