@@ -4,7 +4,7 @@
 #include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
 
-void applyInput(ecs::ComponentManager& world) {
+void useInputSystem(ecs::ComponentManager& world) {
     world.query<Input>(
         [&world](ecs::Entity id, Input) {
             Vector velocity;

@@ -6,7 +6,7 @@
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Circle.hpp"
 
-void applyScoring(ecs::ComponentManager& world) {
+void useScoringSystem(ecs::ComponentManager& world) {
     world.query<ScoringBounds, Position>(
         [&world](ecs::Entity, const ScoringBounds& bounds, const Position& pos) {
             float x = pos.location.x;

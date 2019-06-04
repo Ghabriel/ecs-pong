@@ -12,9 +12,9 @@
 #include "helpers/create-paddle.hpp"
 #include "shapes/Rectangle.hpp"
 #include "systems/input-system.hpp"
-#include "systems/render-world.hpp"
 #include "systems/movement-system.hpp"
-#include "systems/rectangle-bounds-system.hpp"
+#include "systems/paddle-bounding-system.hpp"
+#include "systems/rendering-system.hpp"
 #include "systems/scoring-system.hpp"
 
 using ecs::Entity;
@@ -80,14 +80,14 @@ class Game {
         unsigned elapsedTimeMicro = elapsedTime.asMicroseconds();
         float normalizedElapsedTime = elapsedTimeMicro / 1000000.0;
 
-        applyInput(world);
-        applyMovement(world, normalizedElapsedTime);
-        applyRectangleBounds(world);
-        applyScoring(world);
+        useInputSystem(world);
+        useMovementSystem(world, normalizedElapsedTime);
+        usePaddleBoundingSystem(world);
+        useScoringSystem(world);
     }
 
     void render(sf::RenderWindow& window) {
-        renderWorld(world, window);
+        useRenderingSystem(world, window);
     }
 
  private:

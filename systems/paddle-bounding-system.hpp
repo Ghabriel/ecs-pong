@@ -6,7 +6,7 @@
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Rectangle.hpp"
 
-void applyRectangleBounds(ecs::ComponentManager& world) {
+void usePaddleBoundingSystem(ecs::ComponentManager& world) {
     world.findAll<Position>()
         .join<RectangularObject>()
         .forEach([&world](Position& pos, const RectangularObject& obj) {

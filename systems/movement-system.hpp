@@ -11,7 +11,7 @@
 #include "../shapes/MovingCircle.hpp"
 #include "../shapes/Rectangle.hpp"
 
-void applyMovement(ecs::ComponentManager& world, float elapsedTime) {
+void useMovementSystem(ecs::ComponentManager& world, float elapsedTime) {
     world.query<Velocity, Position, CircularObject>(
         [&world, elapsedTime](ecs::Entity, Velocity& v, Position& pos, const CircularObject& obj) {
             Circle body { pos.location, obj.radius };
