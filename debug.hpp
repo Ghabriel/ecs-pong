@@ -6,7 +6,6 @@
 #include "shapes/Line.hpp"
 #include "shapes/LineSegment.hpp"
 #include "shapes/MovingCircle.hpp"
-#include "shapes/MovingRectangle.hpp"
 #include "shapes/Point.hpp"
 #include "shapes/Rectangle.hpp"
 
@@ -33,8 +32,4 @@ std::ostream& operator<<(std::ostream& stream, const Rectangle& r) {
 
 std::ostream& operator<<(std::ostream& stream, const MovingCircle& c) {
     return stream << "(circle = " << c.circle << ", velocity = " << c.velocity << ")";
-}
-
-std::ostream& operator<<(std::ostream& stream, const MovingRectangle& r) {
-    return stream << "(rectangle = " << r.rectangle << ", velocity = " << r.velocity << ")";
 }
