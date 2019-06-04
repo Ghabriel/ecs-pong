@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <SFML/Graphics.hpp>
+#include "constants.hpp"
 #include "framework/ComponentManager.hpp"
 #include "init/create-ball.hpp"
 #include "init/create-paddle.hpp"
@@ -16,12 +17,14 @@
 
 class Game {
  public:
-    void init() {
-        Rectangle boardArea { {0, 0}, 800, 600 };
+    void init(float width, float height) {
+        using constants::PADDLE_WIDTH;
+        using constants::PADDLE_BORDER_DISTANCE;
+        Rectangle boardArea { {0, 0}, width, height };
         createWalls(world, boardArea);
         createScoreboard(world, boardArea);
-        createPlayerPaddle(boardArea, 20);
-        createBotPaddle(boardArea, 760);
+        createPlayerPaddle(boardArea, PADDLE_BORDER_DISTANCE);
+        createBotPaddle(boardArea, width - PADDLE_WIDTH - PADDLE_BORDER_DISTANCE);
         createBall(world, boardArea);
     }
 

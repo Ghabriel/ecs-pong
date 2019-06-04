@@ -1,10 +1,13 @@
 #include <SFML/Graphics.hpp>
+#include "constants.hpp"
 #include "Game.hpp"
 
 int main(int, char**) {
-    sf::RenderWindow window(sf::VideoMode(800, 600), "ECS Pong");
+    using constants::WINDOW_WIDTH;
+    using constants::WINDOW_HEIGHT;
+    sf::RenderWindow window(sf::VideoMode(WINDOW_WIDTH, WINDOW_HEIGHT), "ECS Pong");
     Game game;
-    game.init();
+    game.init(WINDOW_WIDTH, WINDOW_HEIGHT);
 
     window.setFramerateLimit(60);
     window.setPosition({200, 100});

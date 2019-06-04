@@ -1,18 +1,22 @@
 #pragma once
 
 #include <random>
+#include "../constants.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Rectangle.hpp"
 
 Vector generateVelocity() {
+    using constants::BALL_MAX_AXIS_VELOCITY;
+    using constants::BALL_MIN_SQUARED_VELOCITY;
+    using constants::BALL_MAX_SQUARED_VELOCITY;
     std::random_device randomDevice;
     std::mt19937 generator(randomDevice());
-    std::uniform_int_distribution<int> dist(-500, 500);
+    std::uniform_int_distribution<int> dist(-BALL_MAX_AXIS_VELOCITY, BALL_MAX_AXIS_VELOCITY);
     int x = 0;
     int y = 0;
     int squaredSpeed = 0;
 
-    while (squaredSpeed < 250000 || squaredSpeed > 320000) {
+    while (squaredSpeed < BALL_MIN_SQUARED_VELOCITY || squaredSpeed > BALL_MAX_SQUARED_VELOCITY) {
         x = 0;
         y = 0;
 
@@ -31,12 +35,10 @@ Vector generateVelocity() {
 }
 
 ecs::Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    constexpr float radius = 10;
-
     Point midPoint = boardArea.getMidPoint();
 
     ecs::Entity id = world.createEntity(
-        CircularObject { radius },
+        CircularObject { constants::BALL_RADIUS },
         Drawable { },
         Position { midPoint },
         ScoringBounds { 0, boardArea.width },
