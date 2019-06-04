@@ -1,14 +1,7 @@
 #pragma once
 
 #include <random>
-#include "../components/CircularObject.hpp"
-#include "../components/Drawable.hpp"
-#include "../components/Position.hpp"
-#include "../components/ScoreListener.hpp"
-#include "../components/ScoringBounds.hpp"
-#include "../components/Velocity.hpp"
 #include "../framework/ComponentManager.hpp"
-#include "../shapes/Circle.hpp"
 #include "../shapes/Rectangle.hpp"
 
 Vector generateVelocity() {

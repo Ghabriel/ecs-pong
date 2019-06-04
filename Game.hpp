@@ -5,6 +5,8 @@
 #include "framework/ComponentManager.hpp"
 #include "helpers/create-ball.hpp"
 #include "helpers/create-paddle.hpp"
+#include "helpers/create-scoreboard.hpp"
+#include "helpers/create-walls.hpp"
 #include "shapes/Rectangle.hpp"
 #include "systems/input-system.hpp"
 #include "systems/movement-system.hpp"
@@ -12,51 +14,13 @@
 #include "systems/rendering-system.hpp"
 #include "systems/scoring-system.hpp"
 
-using ecs::Entity;
-
-void createWalls(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    Point upperLeft { 0, 0 };
-    Point upperRight { boardArea.width, 0 };
-    Point lowerLeft { 0, boardArea.height };
-    Point lowerRight { boardArea.width, boardArea.height };
-    LineSegment upperSegment { upperLeft, upperRight };
-    LineSegment lowerSegment { lowerLeft, lowerRight };
-
-    world.createEntity(Wall { { upperSegment, { 0, 1 } } });
-    world.createEntity(Wall { { lowerSegment, { 0, -1 } } });
-}
-
-void createScoreboard(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    Entity id = world.createEntity(
-        Scoreboard { { 0, 0 } },
-        Position { boardArea.width / 2, 30 }
-    );
-
-    auto callback = [&world, id](Team team) {
-        Scoreboard& scoreboard = world.getData<Scoreboard>(id);
-        std::pair<unsigned, unsigned>& scores = scoreboard.scores;
-        switch (team) {
-            case Team::Left:
-                std::cout << "Left scored\n";
-                scores.first++;
-                break;
-            case Team::Right:
-                std::cout << "Right scored\n";
-                scores.second++;
-                break;
-        }
-    };
-
-    world.addComponent<ScoreListener>(id, { callback });
-}
-
-Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    Entity id = createPaddle(world, boardArea, 20);
+ecs::Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
+    ecs::Entity id = createPaddle(world, boardArea, 20);
     world.addComponent<Input>(id, { });
     return id;
 }
 
-Entity createRightPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
+ecs::Entity createRightPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
     return createPaddle(world, boardArea, 760);
 }
 

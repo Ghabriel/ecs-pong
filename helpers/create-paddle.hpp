@@ -1,8 +1,5 @@
 #pragma once
 
-#include "../components/Drawable.hpp"
-#include "../components/Position.hpp"
-#include "../components/RectangularObject.hpp"
 #include "../framework/ComponentManager.hpp"
 #include "../shapes/Rectangle.hpp"
 
