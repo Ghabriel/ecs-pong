@@ -3,10 +3,10 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "framework/ComponentManager.hpp"
-#include "helpers/create-ball.hpp"
-#include "helpers/create-paddle.hpp"
-#include "helpers/create-scoreboard.hpp"
-#include "helpers/create-walls.hpp"
+#include "init/create-ball.hpp"
+#include "init/create-paddle.hpp"
+#include "init/create-scoreboard.hpp"
+#include "init/create-walls.hpp"
 #include "shapes/Rectangle.hpp"
 #include "systems/input-system.hpp"
 #include "systems/movement-system.hpp"
@@ -14,24 +14,14 @@
 #include "systems/rendering-system.hpp"
 #include "systems/scoring-system.hpp"
 
-ecs::Entity createLeftPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    ecs::Entity id = createPaddle(world, boardArea, 20);
-    world.addComponent<Input>(id, { });
-    return id;
-}
-
-ecs::Entity createRightPaddle(ecs::ComponentManager& world, const Rectangle& boardArea) {
-    return createPaddle(world, boardArea, 760);
-}
-
 class Game {
  public:
     void init() {
         Rectangle boardArea { {0, 0}, 800, 600 };
         createWalls(world, boardArea);
         createScoreboard(world, boardArea);
-        createLeftPaddle(world, boardArea);
-        createRightPaddle(world, boardArea);
+        createPlayerPaddle(boardArea, 20);
+        createBotPaddle(boardArea, 760);
         createBall(world, boardArea);
     }
 
@@ -51,4 +41,13 @@ class Game {
 
  private:
     ecs::ComponentManager world;
+
+    void createPlayerPaddle(const Rectangle& boardArea, float x) {
+        ecs::Entity id = createPaddle(world, boardArea, x);
+        world.addComponent<Input>(id, { });
+    }
+
+    void createBotPaddle(const Rectangle& boardArea, float x) {
+        createPaddle(world, boardArea, x);
+    }
 };
