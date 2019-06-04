@@ -1,7 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include "../components/Bounds.hpp"
 #include "../components/CircularObject.hpp"
 #include "../components/Drawable.hpp"
 #include "../components/Input.hpp"
@@ -33,7 +32,6 @@ namespace ecs {
     }
 
     using ECS = __detail::GenericECS<
-        Bounds,
         CircularObject,
         Drawable,
         Input,

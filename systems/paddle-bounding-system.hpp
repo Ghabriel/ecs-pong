@@ -1,10 +1,7 @@
 #pragma once
 
-#include <algorithm>
-#include "../components/Bounds.hpp"
 #include "../components/RectangularObject.hpp"
 #include "../framework/ComponentManager.hpp"
-#include "../shapes/Rectangle.hpp"
 
 void usePaddleBoundingSystem(ecs::ComponentManager& world) {
     world.findAll<Position>()

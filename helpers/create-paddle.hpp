@@ -1,6 +1,5 @@
 #pragma once
 
-#include "../components/Bounds.hpp"
 #include "../components/Drawable.hpp"
 #include "../components/Position.hpp"
 #include "../components/RectangularObject.hpp"
@@ -13,7 +12,6 @@ ecs::Entity createPaddle(ecs::ComponentManager& world, const Rectangle& boardAre
     float y = boardArea.corner.y + (boardArea.height / 2);
 
     return world.createEntity(
-        Bounds { 0, boardArea.height },
         Drawable { },
         Position { x + width / 2, y },
         RectangularObject { width, height }
