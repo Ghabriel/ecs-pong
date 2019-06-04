@@ -53,7 +53,8 @@ namespace rendering_system {
             loadedFont = true;
         }
 
-        world.findAll<Scoreboard>()
+        world.findAll<Drawable>()
+            .join<Scoreboard>()
             .join<Position>()
             .forEach(
                 [&window](const Scoreboard& scoreboard, const Position& pos) {

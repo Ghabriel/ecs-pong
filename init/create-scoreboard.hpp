@@ -5,6 +5,7 @@
 
 void createScoreboard(ecs::ComponentManager& world, const Rectangle& boardArea) {
     ecs::Entity id = world.createEntity(
+        Drawable { },
         Scoreboard { { 0, 0 } },
         Position { boardArea.width / 2, 30 }
     );
