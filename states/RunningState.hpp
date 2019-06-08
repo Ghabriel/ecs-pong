@@ -15,19 +15,21 @@ class RunningState : public state::State {
         ecs::ComponentManager& world,
         state::StateMachine& stateMachine
     ) : world(world), stateMachine(stateMachine) {
-        scoreListener = world.createEntity();
-    }
+        scoreListenerId = world.createEntity();
 
-    void onEnter() override {
-        auto callback = [this](Team team) {
+        auto callback = [&stateMachine](Team team) {
             stateMachine.pushState("waiting");
         };
 
-        world.addComponent<ScoreListener>(scoreListener, { callback });
+        scoreListener = ScoreListener { callback };
+    }
+
+    void onEnter() override {
+        world.addComponent(scoreListenerId, scoreListener);
     }
 
     void onExit() override {
-        world.removeComponent<ScoreListener>(scoreListener);
+        world.removeComponent<ScoreListener>(scoreListenerId);
     }
 
     void update(const sf::Time& elapsedTime) override {
@@ -47,5 +49,6 @@ class RunningState : public state::State {
  private:
     ecs::ComponentManager& world;
     state::StateMachine& stateMachine;
-    ecs::Entity scoreListener;
+    ecs::Entity scoreListenerId;
+    ScoreListener scoreListener;
 };

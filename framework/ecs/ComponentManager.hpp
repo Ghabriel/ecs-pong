@@ -25,7 +25,10 @@ namespace ecs {
         T& getData(Entity);
 
         template<typename T, typename... Ts, typename Functor>
-        void query(Functor fn);
+        void query(Functor);
+
+        template<typename T, typename... Ts, typename Functor>
+        void mutatingQuery(Functor);
 
         template<typename T, typename... Args>
         void notify(Args&&...);
@@ -35,6 +38,9 @@ namespace ecs {
 
      private:
         ECS storage;
+
+        template<typename T, typename... Ts, typename Functor>
+        void internalQuery(Functor, ComponentData<T>&);
     };
 
 
@@ -81,24 +87,20 @@ namespace ecs {
 
     template<typename T, typename... Ts, typename Functor>
     inline void ComponentManager::query(Functor fn) {
-        auto& allEntitiesData = entityData<T>(storage);
+        ComponentData<T>& baseData = entityData<T>(storage);
+        internalQuery<T, Ts...>(fn, baseData);
+    }
 
-        if constexpr (sizeof...(Ts) > 0) {
-            for (auto& [entity, data] : allEntitiesData) {
-                if (hasAllComponents<Ts...>(entity)) {
-                    fn(entity, data, getData<Ts>(entity)...);
-                }
-            }
-        } else {
-            for (auto& [entity, data] : allEntitiesData) {
-                fn(entity, data);
-            }
-        }
+    template<typename T, typename... Ts, typename Functor>
+    inline void ComponentManager::mutatingQuery(Functor fn) {
+        // Makes a copy due to potential iterator invalidation
+        ComponentData<T> baseData = entityData<T>(storage);
+        internalQuery<T, Ts...>(fn, baseData);
     }
 
     template<typename T, typename... Args>
     inline void ComponentManager::notify(Args&&... args) {
-        query<T>([&](Entity, T& listener) {
+        mutatingQuery<T>([&](Entity, T& listener) {
             listener.fn(std::forward<Args>(args)...);
         });
     }
@@ -106,5 +108,20 @@ namespace ecs {
     template<typename T>
     inline DataQuery<T> ComponentManager::findAll() {
         return DataQuery<T>(storage);
+    }
+
+    template<typename T, typename... Ts, typename Functor>
+    inline void ComponentManager::internalQuery(Functor fn, ComponentData<T>& baseData) {
+        if constexpr (sizeof...(Ts) > 0) {
+            for (auto& [entity, data] : baseData) {
+                if (hasAllComponents<Ts...>(entity)) {
+                    fn(entity, data, getData<Ts>(entity)...);
+                }
+            }
+        } else {
+            for (auto& [entity, data] : baseData) {
+                fn(entity, data);
+            }
+        }
     }
 }
