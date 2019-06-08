@@ -1,19 +1,17 @@
 #pragma once
 
 #include <iostream>
+#include <memory>
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
 #include "framework/ecs/ComponentManager.hpp"
+#include "framework/state-management/StateMachine.hpp"
 #include "init/create-ball.hpp"
 #include "init/create-paddle.hpp"
 #include "init/create-scoreboard.hpp"
 #include "init/create-walls.hpp"
 #include "shapes/Rectangle.hpp"
-#include "systems/input-system.hpp"
-#include "systems/movement-system.hpp"
-#include "systems/paddle-bounding-system.hpp"
-#include "systems/rendering-system.hpp"
-#include "systems/scoring-system.hpp"
+#include "states/RunningState.hpp"
 
 class Game {
  public:
@@ -26,24 +24,22 @@ class Game {
         createPlayerPaddle(boardArea, PADDLE_BORDER_DISTANCE);
         createBotPaddle(boardArea, width - PADDLE_WIDTH - PADDLE_BORDER_DISTANCE);
         createBall(world, boardArea);
+
+        stateMachine.registerState("running", std::make_unique<RunningState>(world));
+        stateMachine.pushState("running");
     }
 
     void update(const sf::Time& elapsedTime) {
-        unsigned elapsedTimeMicro = elapsedTime.asMicroseconds();
-        float normalizedElapsedTime = elapsedTimeMicro / 1000000.0;
-
-        useInputSystem(world);
-        useMovementSystem(world, normalizedElapsedTime);
-        usePaddleBoundingSystem(world);
-        useScoringSystem(world);
+        stateMachine.getState().update(elapsedTime);
     }
 
     void render(sf::RenderWindow& window) {
-        useRenderingSystem(world, window);
+        stateMachine.getState().render(window);
     }
 
  private:
     ecs::ComponentManager world;
+    state::StateMachine stateMachine;
 
     void createPlayerPaddle(const Rectangle& boardArea, float x) {
         ecs::Entity id = createPaddle(world, boardArea, x);
