@@ -12,6 +12,7 @@
 #include "init/create-walls.hpp"
 #include "shapes/Rectangle.hpp"
 #include "states/RunningState.hpp"
+#include "states/WaitingState.hpp"
 
 class Game {
  public:
@@ -25,8 +26,9 @@ class Game {
         createBotPaddle(boardArea, width - PADDLE_WIDTH - PADDLE_BORDER_DISTANCE);
         createBall(world, boardArea);
 
-        stateMachine.registerState("running", std::make_unique<RunningState>(world));
-        stateMachine.pushState("running");
+        stateMachine.registerState("waiting", std::make_unique<WaitingState>(world, stateMachine));
+        stateMachine.registerState("running", std::make_unique<RunningState>(world, stateMachine));
+        stateMachine.pushState("waiting");
     }
 
     void update(const sf::Time& elapsedTime) {
