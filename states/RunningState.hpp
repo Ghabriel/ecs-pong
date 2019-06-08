@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../constants.hpp"
 #include "../framework/ecs/ComponentManager.hpp"
 #include "../framework/state-management/State.hpp"
+#include "../framework/state-management/StateMachine.hpp"
 #include "../systems/input-system.hpp"
 #include "../systems/movement-system.hpp"
 #include "../systems/paddle-bounding-system.hpp"
@@ -11,7 +11,24 @@
 
 class RunningState : public state::State {
  public:
-    RunningState(ecs::ComponentManager& world) : world(world) { }
+    RunningState(
+        ecs::ComponentManager& world,
+        state::StateMachine& stateMachine
+    ) : world(world), stateMachine(stateMachine) {
+        scoreListener = world.createEntity();
+    }
+
+    void onEnter() override {
+        auto callback = [this](Team team) {
+            stateMachine.pushState("waiting");
+        };
+
+        world.addComponent<ScoreListener>(scoreListener, { callback });
+    }
+
+    void onExit() override {
+        world.removeComponent<ScoreListener>(scoreListener);
+    }
 
     void update(const sf::Time& elapsedTime) override {
         unsigned elapsedTimeMicro = elapsedTime.asMicroseconds();
@@ -29,4 +46,6 @@ class RunningState : public state::State {
 
  private:
     ecs::ComponentManager& world;
+    state::StateMachine& stateMachine;
+    ecs::Entity scoreListener;
 };
