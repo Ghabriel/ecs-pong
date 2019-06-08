@@ -1,6 +1,9 @@
 #pragma once
 
+#include "../events/BaseEvents.hpp"
+#include "../events/TransitionEvent.hpp"
 #include "../framework/ecs/ComponentManager.hpp"
+#include "../framework/ecs/EventManager.hpp"
 #include "../framework/state-management/State.hpp"
 #include "../framework/state-management/StateMachine.hpp"
 #include "../systems/input-system.hpp"
@@ -13,21 +16,20 @@ class RunningState : public state::State {
  public:
     RunningState(
         ecs::ComponentManager& world,
-        state::StateMachine& stateMachine
-    ) : world(world), stateMachine(stateMachine) {
-        scoreListener = world.createEntity();
+        state::StateMachine& stateMachine,
+        events::EventManager& eventManager
+    ) : world(world), stateMachine(stateMachine), eventManager(eventManager) {
+        scoreListenerId = eventManager.registerEventListener(
+            std::unique_ptr<TeamEvent>(new TransitionEvent(stateMachine))
+        );
     }
 
     void onEnter() override {
-        auto callback = [this](Team team) {
-            stateMachine.pushState("waiting");
-        };
-
-        world.addComponent<ScoreListener>(scoreListener, { callback });
+        eventManager.enableEventListener<TeamEvent>("score-event", scoreListenerId);
     }
 
     void onExit() override {
-        world.removeComponent<ScoreListener>(scoreListener);
+        eventManager.disableEventListener<TeamEvent>("score-event", scoreListenerId);
     }
 
     void update(const sf::Time& elapsedTime) override {
@@ -37,7 +39,7 @@ class RunningState : public state::State {
         useInputSystem(world);
         useMovementSystem(world, normalizedElapsedTime);
         usePaddleBoundingSystem(world);
-        useScoringSystem(world);
+        useScoringSystem(world, eventManager);
     }
 
     void render(sf::RenderWindow& window) override {
@@ -47,5 +49,6 @@ class RunningState : public state::State {
  private:
     ecs::ComponentManager& world;
     state::StateMachine& stateMachine;
-    ecs::Entity scoreListener;
+    events::EventManager& eventManager;
+    events::ListenerId scoreListenerId;
 };

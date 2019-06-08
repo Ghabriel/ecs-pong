@@ -7,7 +7,6 @@
 #include "../../components/Position.hpp"
 #include "../../components/RectangularObject.hpp"
 #include "../../components/Scoreboard.hpp"
-#include "../../components/ScoreListener.hpp"
 #include "../../components/ScoringBounds.hpp"
 #include "../../components/Velocity.hpp"
 #include "../../components/Wall.hpp"
@@ -38,7 +37,6 @@ namespace ecs {
         Position,
         RectangularObject,
         Scoreboard,
-        ScoreListener,
         ScoringBounds,
         Velocity,
         Wall

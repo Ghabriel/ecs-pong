@@ -21,13 +21,13 @@ class Game {
         using constants::PADDLE_BORDER_DISTANCE;
         Rectangle boardArea { {0, 0}, width, height };
         createWalls(world, boardArea);
-        createScoreboard(world, boardArea);
+        createScoreboard(world, boardArea, eventManager);
         createPlayerPaddle(boardArea, PADDLE_BORDER_DISTANCE);
         createBotPaddle(boardArea, width - PADDLE_WIDTH - PADDLE_BORDER_DISTANCE);
-        createBall(world, boardArea);
+        createBall(world, boardArea, eventManager);
 
         stateMachine.registerState("waiting", std::make_unique<WaitingState>(world, stateMachine));
-        stateMachine.registerState("running", std::make_unique<RunningState>(world, stateMachine));
+        stateMachine.registerState("running", std::make_unique<RunningState>(world, stateMachine, eventManager));
         stateMachine.pushState("waiting");
     }
 
@@ -42,6 +42,7 @@ class Game {
  private:
     ecs::ComponentManager world;
     state::StateMachine stateMachine;
+    events::EventManager eventManager;
 
     void createPlayerPaddle(const Rectangle& boardArea, float x) {
         ecs::Entity id = createPaddle(world, boardArea, x);

@@ -2,7 +2,9 @@
 
 #include <random>
 #include "../constants.hpp"
+#include "../events/BaseEvents.hpp"
 #include "../framework/ecs/ComponentManager.hpp"
+#include "../framework/ecs/EventManager.hpp"
 #include "../shapes/Rectangle.hpp"
 
 Vector generateVelocity() {
@@ -34,7 +36,30 @@ Vector generateVelocity() {
     return { static_cast<float>(x), static_cast<float>(y) };
 }
 
-ecs::Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea) {
+class BallResetEvent : public TeamEvent {
+ public:
+    BallResetEvent(
+        ecs::ComponentManager& world,
+        ecs::Entity ballId,
+        Point midPoint
+    ) : world(world), ballId(ballId), midPoint(midPoint) { }
+
+    virtual void operator()(const Team& team) override {
+        world.getData<Position>(ballId) = { midPoint };
+        world.getData<Velocity>(ballId) = Velocity { generateVelocity() };
+    }
+
+ private:
+    ecs::ComponentManager& world;
+    ecs::Entity ballId;
+    Point midPoint;
+};
+
+ecs::Entity createBall(
+    ecs::ComponentManager& world,
+    const Rectangle& boardArea,
+    events::EventManager& eventManager
+) {
     Point midPoint = boardArea.getMidPoint();
 
     ecs::Entity id = world.createEntity(
@@ -45,14 +70,11 @@ ecs::Entity createBall(ecs::ComponentManager& world, const Rectangle& boardArea)
         Velocity { generateVelocity() }
     );
 
-    auto scoringCallback = [&world, id, midPoint](Team) {
-        world.getData<Position>(id) = { midPoint };
-        world.getData<Velocity>(id) = Velocity { generateVelocity() };
-    };
-
-    world.createEntity(
-        ScoreListener { scoringCallback }
+    events::ListenerId listenerId = eventManager.registerEventListener(
+        std::unique_ptr<TeamEvent>(new BallResetEvent(world, id, midPoint))
     );
+
+    eventManager.enableEventListener<TeamEvent>("score-event", listenerId);
 
     return id;
 }
