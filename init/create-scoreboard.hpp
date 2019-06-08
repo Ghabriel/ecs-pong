@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../framework/ComponentManager.hpp"
+#include "../framework/ecs/ComponentManager.hpp"
 #include "../shapes/Rectangle.hpp"
 
 void createScoreboard(ecs::ComponentManager& world, const Rectangle& boardArea) {

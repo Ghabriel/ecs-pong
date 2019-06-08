@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../framework/ComponentManager.hpp"
+#include "../framework/ecs/ComponentManager.hpp"
 
 void useScoringSystem(ecs::ComponentManager& world) {
     world.query<ScoringBounds, Position>(

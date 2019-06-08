@@ -3,7 +3,7 @@
 #include <iostream>
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
-#include "framework/ComponentManager.hpp"
+#include "framework/ecs/ComponentManager.hpp"
 #include "init/create-ball.hpp"
 #include "init/create-paddle.hpp"
 #include "init/create-scoreboard.hpp"

@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../framework/ComponentManager.hpp"
+#include "../framework/ecs/ComponentManager.hpp"
 #include "../physics/interactions.hpp"
 #include "../shapes/Circle.hpp"
 #include "../shapes/MovingCircle.hpp"

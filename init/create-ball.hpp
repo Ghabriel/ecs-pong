@@ -2,7 +2,7 @@
 
 #include <random>
 #include "../constants.hpp"
-#include "../framework/ComponentManager.hpp"
+#include "../framework/ecs/ComponentManager.hpp"
 #include "../shapes/Rectangle.hpp"
 
 Vector generateVelocity() {
