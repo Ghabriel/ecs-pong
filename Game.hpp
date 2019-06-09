@@ -4,8 +4,8 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
-#include "framework/ecs/userland.hpp"
-#include "framework/state-management/StateMachine.hpp"
+#include "engine/ecs/userland.hpp"
+#include "engine/state-management/StateMachine.hpp"
 #include "init/create-ball.hpp"
 #include "init/create-paddle.hpp"
 #include "init/create-scoreboard.hpp"

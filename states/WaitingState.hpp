@@ -1,8 +1,8 @@
 #pragma once
 
-#include "../framework/ecs/userland.hpp"
-#include "../framework/state-management/State.hpp"
-#include "../framework/state-management/StateMachine.hpp"
+#include "../engine/ecs/userland.hpp"
+#include "../engine/state-management/State.hpp"
+#include "../engine/state-management/StateMachine.hpp"
 #include "../systems/rendering-system.hpp"
 
 class WaitingState : public state::State {
