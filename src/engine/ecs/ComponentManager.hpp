@@ -43,7 +43,7 @@ namespace ecs {
         /**
          * Checks if an entity has all the input components.
          */
-        template<typename T, typename... Ts>
+        template<typename... Ts>
         bool hasAllComponents(Entity) const;
 
         /**
@@ -134,15 +134,9 @@ namespace ecs {
     }
 
     template<typename ECS>
-    template<typename T, typename... Ts>
+    template<typename... Ts>
     bool GenericComponentManager<ECS>::hasAllComponents(Entity entity) const {
-        bool hasT = hasComponent<T>(entity);
-
-        if constexpr (sizeof...(Ts) > 0) {
-            return hasT && hasAllComponents<Ts...>(entity);
-        } else {
-            return hasT;
-        }
+        return (hasComponent<Ts>(entity) && ...);
     }
 
     template<typename ECS>
