@@ -4,36 +4,95 @@
 #include "ECS.hpp"
 
 namespace ecs {
+    /**
+     * Manages the game entities and their components.
+     *
+     * In the Entity-Component-System architecture, entities are simple GUIDs.
+     * Components by themselves have no logic and can be bound to entities to
+     * add data to them. All the game logic is implemented by systems, which
+     * operate on the data bound to the entities.
+     */
     template<typename ECS>
     class GenericComponentManager {
      public:
+        /**
+         * Creates a new entity with the given components, if any.
+         * Returns the ID of the created entity.
+         */
         template<typename... Ts>
         Entity createEntity(Ts&&...);
 
+        /**
+         * Adds a given T component to an entity.
+         */
         template<typename T>
         void addComponent(Entity, T&&);
 
+        /**
+         * Removes the T component from an entity.
+         */
         template<typename T>
         void removeComponent(Entity);
 
+        /**
+         * Checks if an entity has a T component.
+         */
         template<typename T>
         bool hasComponent(Entity) const;
 
+        /**
+         * Checks if an entity has all the input components.
+         */
         template<typename T, typename... Ts>
         bool hasAllComponents(Entity) const;
 
+        /**
+         * Returns the T component data of an entity. Throws if
+         * the entity doesn't have the T component.
+         */
         template<typename T>
         T& getData(Entity);
 
+        /**
+         * Iterates over all entities that have all the input components,
+         * executing a callback for each of them.
+         *
+         * The entity itself and its data for all the input components is
+         * passed to the callback. `fn` must be compatible with the following
+         * signature:
+         *
+         * `std::function<void(Entity, T&, std::add_lvalue_reference_t<Ts>...)> fn`
+         *
+         * **Note**: the performance of this method increases if the least common
+         * components come first in the list, especially the first.
+         *
+         * **Warning**: `fn` **must not** change the iterated entities, e.g it
+         * must not attach/detach components that are used as input. If that
+         * behavior is desired, use `mutatingQuery` instead.
+         */
         template<typename T, typename... Ts, typename Functor>
         void query(Functor);
 
+        /**
+         * Functionally equal to `query`, but allows the input function to
+         * mutate the components of the iterated entities. This is achieved
+         * through an extra copy, and may have performance implications if
+         * many entities have the T component.
+         */
         template<typename T, typename... Ts, typename Functor>
         void mutatingQuery(Functor);
 
+        /**
+         * Notifies all entities with a listener-like T component, forwarding
+         * the given arguments, if any, to them.
+         */
         template<typename T, typename... Args>
         void notify(Args&&...);
 
+        /**
+         * Allows more "functional-style" queries. Returns a `DataQuery` that
+         * filters all entities with a T component.
+         */
         template<typename T>
         DataQuery<ECS, T> findAll();
 
