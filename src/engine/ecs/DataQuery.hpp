@@ -40,25 +40,26 @@ namespace ecs {
          * filtered Ts.
          *
          * **Warning**: `fn` **must not** change the iterated entities, e.g it
-         * must not attach/detach components that are used as input.
+         * must not attach/detach components that are used as input. If that
+         * behavior is desired, use `mutatingForEach` instead.
          */
         template<typename Functor>
         void forEach(Functor fn) {
-            __detail::Dispatcher<lambda_argument_types_t<Functor>> dispatcher;
+            ComponentData<T>& baseData = entityData<T>(storage);
+            internalForEach(fn, baseData);
+        }
 
-            auto& allEntitiesData = entityData<T>(storage);
-
-            if constexpr (sizeof...(Ts) > 0) {
-                for (auto& [entity, data] : allEntitiesData) {
-                    if (hasAllComponents<Ts...>(entity)) {
-                        dispatcher(storage, fn, entity);
-                    }
-                }
-            } else {
-                for (auto& [entity, data] : allEntitiesData) {
-                    dispatcher(storage, fn, entity);
-                }
-            }
+        /**
+         * Functionally equal to `forEach`, but allows the input function to
+         * mutate the components of the iterated entities. This is achieved
+         * through an extra copy, and may have performance implications if
+         * many entities have the first filtered component.
+         */
+        template<typename Functor>
+        void mutatingForEach(Functor fn) {
+            // Makes a copy due to potential iterator invalidation
+            ComponentData<T> baseData = entityData<T>(storage);
+            internalForEach(fn, baseData);
         }
 
     private:
@@ -77,6 +78,23 @@ namespace ecs {
                 return hasT && hasAllComponents<Us...>(entity);
             } else {
                 return hasT;
+            }
+        }
+
+        template<typename Functor>
+        void internalForEach(Functor fn, ComponentData<T>& baseData) {
+            __detail::Dispatcher<lambda_argument_types_t<Functor>> dispatcher;
+
+            if constexpr (sizeof...(Ts) > 0) {
+                for (auto& [entity, data] : baseData) {
+                    if (hasAllComponents<Ts...>(entity)) {
+                        dispatcher(storage, fn, entity);
+                    }
+                }
+            } else {
+                for (auto& [entity, data] : baseData) {
+                    dispatcher(storage, fn, entity);
+                }
             }
         }
     };
