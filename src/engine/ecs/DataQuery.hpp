@@ -23,11 +23,25 @@ namespace ecs {
     public:
         explicit DataQuery(ECS& storage) : storage(storage) { }
 
+        /**
+         * Returns a `DataQuery` with an additional `U` filter.
+         */
         template<typename U>
         DataQuery<ECS, T, Ts..., U> join() {
             return DataQuery<ECS, T, Ts..., U>(storage);
         }
 
+        /**
+         * Iterates over all entities that match this `DataQuery` filters,
+         * executing a callback for each of them.
+         *
+         * The callback itself dictates which data is passed to it. Its
+         * parameters can be either T, T& or const T& for any combination of
+         * filtered Ts.
+         *
+         * **Warning**: `fn` **must not** change the iterated entities, e.g it
+         * must not attach/detach components that are used as input.
+         */
         template<typename Functor>
         void forEach(Functor fn) {
             __detail::Dispatcher<lambda_argument_types_t<Functor>> dispatcher;
