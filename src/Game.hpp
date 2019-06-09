@@ -4,7 +4,7 @@
 #include <memory>
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
-#include "engine/ecs/userland.hpp"
+#include "engine-glue/ecs.hpp"
 #include "engine/shapes/Rectangle.hpp"
 #include "engine/state-management/StateMachine.hpp"
 #include "init/create-ball.hpp"

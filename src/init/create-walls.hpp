@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/ecs/userland.hpp"
+#include "../engine-glue/ecs.hpp"
 #include "../engine/shapes/LineSegment.hpp"
 #include "../engine/shapes/Point.hpp"
 #include "../engine/shapes/Rectangle.hpp"

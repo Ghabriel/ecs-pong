@@ -2,7 +2,7 @@
 
 #include <random>
 #include "../constants.hpp"
-#include "../engine/ecs/userland.hpp"
+#include "../engine-glue/ecs.hpp"
 #include "../engine/shapes/Rectangle.hpp"
 
 Vector generateVelocity() {

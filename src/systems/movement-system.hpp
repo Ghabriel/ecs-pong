@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../engine/ecs/userland.hpp"
+#include "../engine-glue/ecs.hpp"
 #include "../engine/physics/interactions.hpp"
 #include "../engine/shapes/Circle.hpp"
 #include "../engine/shapes/MovingCircle.hpp"
