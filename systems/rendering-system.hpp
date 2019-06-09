@@ -2,8 +2,8 @@
 
 #include <SFML/Graphics.hpp>
 #include "../engine/ecs/userland.hpp"
-#include "../shapes/Circle.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "../engine/shapes/Circle.hpp"
+#include "../engine/shapes/Rectangle.hpp"
 
 namespace rendering_system {
     void renderCircles(ecs::ComponentManager& world, sf::RenderWindow& window) {

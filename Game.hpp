@@ -5,12 +5,12 @@
 #include <SFML/Graphics.hpp>
 #include "constants.hpp"
 #include "engine/ecs/userland.hpp"
+#include "engine/shapes/Rectangle.hpp"
 #include "engine/state-management/StateMachine.hpp"
 #include "init/create-ball.hpp"
 #include "init/create-paddle.hpp"
 #include "init/create-scoreboard.hpp"
 #include "init/create-walls.hpp"
-#include "shapes/Rectangle.hpp"
 #include "states/RunningState.hpp"
 #include "states/WaitingState.hpp"
 

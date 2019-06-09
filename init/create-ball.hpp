@@ -3,7 +3,7 @@
 #include <random>
 #include "../constants.hpp"
 #include "../engine/ecs/userland.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "../engine/shapes/Rectangle.hpp"
 
 Vector generateVelocity() {
     using constants::BALL_MAX_AXIS_VELOCITY;

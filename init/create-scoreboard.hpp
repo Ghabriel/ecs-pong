@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../engine/ecs/userland.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "../engine/shapes/Rectangle.hpp"
 
 void createScoreboard(ecs::ComponentManager& world, const Rectangle& boardArea) {
     ecs::Entity id = world.createEntity(

@@ -2,7 +2,7 @@
 
 #include "../constants.hpp"
 #include "../engine/ecs/userland.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "../engine/shapes/Rectangle.hpp"
 
 ecs::Entity createPaddle(ecs::ComponentManager& world, const Rectangle& boardArea, float x) {
     using constants::PADDLE_WIDTH;

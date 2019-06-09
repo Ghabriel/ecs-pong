@@ -1,10 +1,10 @@
 #pragma once
 
 #include "../engine/ecs/userland.hpp"
-#include "../physics/interactions.hpp"
-#include "../shapes/Circle.hpp"
-#include "../shapes/MovingCircle.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "../engine/physics/interactions.hpp"
+#include "../engine/shapes/Circle.hpp"
+#include "../engine/shapes/MovingCircle.hpp"
+#include "../engine/shapes/Rectangle.hpp"
 
 void useMovementSystem(ecs::ComponentManager& world, float elapsedTime) {
     world.query<Velocity, Position, CircularObject>(

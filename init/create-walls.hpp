@@ -1,9 +1,9 @@
 #pragma once
 
 #include "../engine/ecs/userland.hpp"
-#include "../shapes/LineSegment.hpp"
-#include "../shapes/Point.hpp"
-#include "../shapes/Rectangle.hpp"
+#include "../engine/shapes/LineSegment.hpp"
+#include "../engine/shapes/Point.hpp"
+#include "../engine/shapes/Rectangle.hpp"
 
 void createWalls(ecs::ComponentManager& world, const Rectangle& boardArea) {
     Point upperLeft { 0, 0 };

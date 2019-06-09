@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../shapes/OrientedLineSegment.hpp"
+#include "../engine/shapes/OrientedLineSegment.hpp"
 
 struct Wall {
     OrientedLineSegment body;
