@@ -7,6 +7,8 @@
 #include "../engine/shapes/Rectangle.hpp"
 
 void useMovementSystem(ecs::ComponentManager& world, float elapsedTime) {
+    using physics::interact;
+
     world.query<Velocity, Position, CircularObject>(
         [&world, elapsedTime](ecs::Entity, Velocity& v, Position& pos, const CircularObject& obj) {
             Circle body { pos.location, obj.radius };

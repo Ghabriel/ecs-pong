@@ -6,23 +6,28 @@
 #include "../shapes/LineSegment.hpp"
 #include "../shapes/Rectangle.hpp"
 
-std::vector<OrientedLineSegment> findClosestEdges(const Rectangle& rect, const Circle& circle) {
-    std::array<OrientedLineSegment, 4> edges = rect.getOrientedEdges();
-    std::vector<OrientedLineSegment> result;
-    result.reserve(4);
-    float distance = -1;
+namespace physics {
+    std::vector<OrientedLineSegment> findClosestEdges(
+        const Rectangle& rect,
+        const Circle& circle
+    ) {
+        std::array<OrientedLineSegment, 4> edges = rect.getOrientedEdges();
+        std::vector<OrientedLineSegment> result;
+        result.reserve(4);
+        float distance = -1;
 
-    for (const OrientedLineSegment& edge : edges) {
-        float d = findSquaredDistance(edge.segment, circle.center);
+        for (const OrientedLineSegment& edge : edges) {
+            float d = findSquaredDistance(edge.segment, circle.center);
 
-        if (std::abs(d - distance) < 1e-3) {
-            result.push_back(edge);
-        } else if (distance == -1 || d < distance) {
-            result.clear();
-            result.push_back(edge);
-            distance = d;
+            if (std::abs(d - distance) < 1e-3) {
+                result.push_back(edge);
+            } else if (distance == -1 || d < distance) {
+                result.clear();
+                result.push_back(edge);
+                distance = d;
+            }
         }
-    }
 
-    return result;
+        return result;
+    }
 }
