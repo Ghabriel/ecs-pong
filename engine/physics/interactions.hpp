@@ -10,9 +10,6 @@
 #include "find-collision-point.hpp"
 #include "rotate.hpp"
 
-#include <iostream>
-#include "../../debug.hpp"
-
 Vector getNormalVector(const std::vector<OrientedLineSegment>& parts) {
     Vector normal { 0, 0 };
 
