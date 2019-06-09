@@ -1,16 +1,6 @@
 #pragma once
 
 #include <unordered_map>
-#include "../../components/CircularObject.hpp"
-#include "../../components/Drawable.hpp"
-#include "../../components/Input.hpp"
-#include "../../components/Position.hpp"
-#include "../../components/RectangularObject.hpp"
-#include "../../components/Scoreboard.hpp"
-#include "../../components/ScoreListener.hpp"
-#include "../../components/ScoringBounds.hpp"
-#include "../../components/Velocity.hpp"
-#include "../../components/Wall.hpp"
 
 namespace ecs {
     using Entity = unsigned;
@@ -24,33 +14,20 @@ namespace ecs {
             ComponentData<T> field;
             static constexpr ComponentData<T> FieldContainer::* address = &FieldContainer::field;
         };
-
-        template<typename... Ts>
-        struct GenericECS : FieldContainer<Ts>... {
-            Entity nextEntityId = 0;
-        };
     }
 
-    using ECS = __detail::GenericECS<
-        CircularObject,
-        Drawable,
-        Input,
-        Position,
-        RectangularObject,
-        Scoreboard,
-        ScoreListener,
-        ScoringBounds,
-        Velocity,
-        Wall
-    >;
+    template<typename... Ts>
+    struct GenericECS : __detail::FieldContainer<Ts>... {
+        Entity nextEntityId = 0;
+    };
 
-    template<typename T>
+    template<typename T, typename ECS>
     constexpr ComponentData<T>& entityData(ECS& ecs) {
         constexpr auto field = __detail::FieldContainer<T>::address;
         return ecs.*field;
     }
 
-    template<typename T>
+    template<typename T, typename ECS>
     constexpr const ComponentData<T>& entityData(const ECS& ecs) {
         constexpr auto field = __detail::FieldContainer<T>::address;
         return ecs.*field;

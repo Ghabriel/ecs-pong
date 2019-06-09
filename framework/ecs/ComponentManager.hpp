@@ -4,7 +4,8 @@
 #include "ECS.hpp"
 
 namespace ecs {
-    class ComponentManager {
+    template<typename ECS>
+    class GenericComponentManager {
      public:
         template<typename... Ts>
         Entity createEntity(Ts&&...);
@@ -34,7 +35,7 @@ namespace ecs {
         void notify(Args&&...);
 
         template<typename T>
-        DataQuery<T> findAll();
+        DataQuery<ECS, T> findAll();
 
      private:
         ECS storage;
@@ -44,33 +45,38 @@ namespace ecs {
     };
 
 
+    template<typename ECS>
     template<typename... Ts>
-    inline Entity ComponentManager::createEntity(Ts&&... data) {
+    inline Entity GenericComponentManager<ECS>::createEntity(Ts&&... data) {
         Entity id = storage.nextEntityId++;
         (addComponent<Ts>(id, std::forward<Ts>(data)), ...);
         return id;
     }
 
+    template<typename ECS>
     template<typename T>
-    inline void ComponentManager::addComponent(Entity entity, T&& data) {
+    inline void GenericComponentManager<ECS>::addComponent(Entity entity, T&& data) {
         entityData<std::decay_t<T>>(storage).insert({
             entity,
             std::forward<T>(data)
         });
     }
 
+    template<typename ECS>
     template<typename T>
-    inline void ComponentManager::removeComponent(Entity entity) {
+    inline void GenericComponentManager<ECS>::removeComponent(Entity entity) {
         entityData<T>(storage).erase(entity);
     }
 
+    template<typename ECS>
     template<typename T>
-    inline bool ComponentManager::hasComponent(Entity entity) const {
+    inline bool GenericComponentManager<ECS>::hasComponent(Entity entity) const {
         return entityData<T>(storage).count(entity);
     }
 
+    template<typename ECS>
     template<typename T, typename... Ts>
-    bool ComponentManager::hasAllComponents(Entity entity) const {
+    bool GenericComponentManager<ECS>::hasAllComponents(Entity entity) const {
         bool hasT = hasComponent<T>(entity);
 
         if constexpr (sizeof...(Ts) > 0) {
@@ -80,38 +86,44 @@ namespace ecs {
         }
     }
 
+    template<typename ECS>
     template<typename T>
-    inline T& ComponentManager::getData(Entity entity) {
+    inline T& GenericComponentManager<ECS>::getData(Entity entity) {
         return entityData<T>(storage).at(entity);
     }
 
+    template<typename ECS>
     template<typename T, typename... Ts, typename Functor>
-    inline void ComponentManager::query(Functor fn) {
+    inline void GenericComponentManager<ECS>::query(Functor fn) {
         ComponentData<T>& baseData = entityData<T>(storage);
         internalQuery<T, Ts...>(fn, baseData);
     }
 
+    template<typename ECS>
     template<typename T, typename... Ts, typename Functor>
-    inline void ComponentManager::mutatingQuery(Functor fn) {
+    inline void GenericComponentManager<ECS>::mutatingQuery(Functor fn) {
         // Makes a copy due to potential iterator invalidation
         ComponentData<T> baseData = entityData<T>(storage);
         internalQuery<T, Ts...>(fn, baseData);
     }
 
+    template<typename ECS>
     template<typename T, typename... Args>
-    inline void ComponentManager::notify(Args&&... args) {
+    inline void GenericComponentManager<ECS>::notify(Args&&... args) {
         mutatingQuery<T>([&](Entity, T& listener) {
             listener.fn(std::forward<Args>(args)...);
         });
     }
 
+    template<typename ECS>
     template<typename T>
-    inline DataQuery<T> ComponentManager::findAll() {
-        return DataQuery<T>(storage);
+    inline DataQuery<ECS, T> GenericComponentManager<ECS>::findAll() {
+        return DataQuery<ECS, T>(storage);
     }
 
+    template<typename ECS>
     template<typename T, typename... Ts, typename Functor>
-    inline void ComponentManager::internalQuery(Functor fn, ComponentData<T>& baseData) {
+    inline void GenericComponentManager<ECS>::internalQuery(Functor fn, ComponentData<T>& baseData) {
         if constexpr (sizeof...(Ts) > 0) {
             for (auto& [entity, data] : baseData) {
                 if (hasAllComponents<Ts...>(entity)) {

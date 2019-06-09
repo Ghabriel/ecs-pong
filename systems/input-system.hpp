@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../framework/ecs/ComponentManager.hpp"
+#include "../framework/ecs/userland.hpp"
 
 void useInputSystem(ecs::ComponentManager& world) {
     world.query<Input>(

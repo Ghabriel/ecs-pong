@@ -11,21 +11,21 @@ namespace ecs {
 
         template<typename... Ts>
         struct Dispatcher<std::tuple<Ts...>> {
-            template<typename Functor>
+            template<typename ECS, typename Functor>
             void operator()(ECS& storage, Functor fn, Entity entity) {
                 fn(entityData<std::decay_t<Ts>>(storage).at(entity)...);
             }
         };
     }
 
-    template<typename T, typename... Ts>
+    template<typename ECS, typename T, typename... Ts>
     class DataQuery {
     public:
         explicit DataQuery(ECS& storage) : storage(storage) { }
 
         template<typename U>
-        DataQuery<T, Ts..., U> join() {
-            return DataQuery<T, Ts..., U>(storage);
+        DataQuery<ECS, T, Ts..., U> join() {
+            return DataQuery<ECS, T, Ts..., U>(storage);
         }
 
         template<typename Functor>

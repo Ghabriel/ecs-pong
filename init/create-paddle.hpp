@@ -1,7 +1,7 @@
 #pragma once
 
 #include "../constants.hpp"
-#include "../framework/ecs/ComponentManager.hpp"
+#include "../framework/ecs/userland.hpp"
 #include "../shapes/Rectangle.hpp"
 
 ecs::Entity createPaddle(ecs::ComponentManager& world, const Rectangle& boardArea, float x) {
